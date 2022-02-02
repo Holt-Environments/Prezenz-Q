@@ -1,0 +1,15 @@
+{
+  "framerate": "30",
+  "width": "1920",
+  "height": "1120",
+  "posx": "0",
+  "posy": "0",
+	"fade_duration": ".25",
+  "background": "bg.mp4",
+	"sensors": {
+		"A": {
+			"port": "COM6",
+			"video": "cat.mp4"
+		}
+	}
+}
