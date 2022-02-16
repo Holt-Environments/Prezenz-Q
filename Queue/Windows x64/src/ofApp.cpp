@@ -183,12 +183,16 @@ void loadConfigFile()
 
 //--------------------------------------------------------------
 void ofApp::setup() {
+	ofSetFullscreen(1);
+
 	ofSetDataPathRoot("../data");
 
 	loadConfigFile();
 
-	ofSetWindowShape(window_width, window_height);
-	ofSetWindowPosition(window_posx, window_posy);
+	std::cout << ofGetHeight() << std::endl;
+	std::cout << ofGetWidth() << std::endl;
+
+	//ofSetWindowPosition(window_posx, 25);
 	ofSetFrameRate(framerate);
 
 	background.play();

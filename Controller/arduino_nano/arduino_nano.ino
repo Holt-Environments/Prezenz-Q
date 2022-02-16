@@ -26,25 +26,25 @@
 #define SENSOR_I2C_CLOCK 400000
 
 //  Maximum response time for sensor before sensor returns an error
-#define SENSOR_TIMEOUT 500 // ms
+#define SENSOR_TIMEOUT 0 // ms
 
 //  Sensor_timing_budget_ms controlls how long the sensor is actively reading.
 //  Sensor_wait_ms is the amount of ms that the sensor will NOT read between successive
 //  intervals.
-#define SENSOR_TIMING_BUDGET_MS 50 // ms
-#define SENSOR_WAIT_MS 0 // ms
+#define SENSOR_TIMING_BUDGET_MS 200 // ms
+#define SENSOR_WAIT_MS 200 // ms
 #define SENSOR_TIMING_BUDGET ((long)SENSOR_TIMING_BUDGET_MS * 1000) // 50,000 us = 50 ms
 #define SENSOR_WAIT (SENSOR_TIMING_BUDGET_MS + SENSOR_WAIT_MS)
 
 //  The trigger distance does not have a "real world equivalent" yet. This is a unit-less number.
-#define SENSOR_TRIGGER_DISTANCE 600
+#define SENSOR_TRIGGER_DISTANCE 350
 
 //  Sensor should be unique for each device. values are 0-255 char values, where alphabet chars
 //  are highly reccomended.
-#define SENSOR_ID 'B'
+#define SENSOR_ID 'E'
 #define SENSOR_ERROR_INIT_FAILED 0x30 // '0' Error value for when sensor initialization has timed out.
 #define SENSOR_ERROR_TIMEOUT 0x31 // '1' Error value for when sensor reading has timed out.
-#define SENSOR_DETECTION_BUFFER_MAX 20
+#define SENSOR_DETECTION_BUFFER_MAX 5
 
 //  When not using a specific led color channel (When that led color channel is not wired/connected to 
 //  a corresponding Arduino digital pin) its definition should be set to (-1).
@@ -106,10 +106,12 @@ bool initSensor()
   sensor.setTimeout(SENSOR_TIMEOUT);
 
   sensor_initialized = sensor.init();
+
+  sensor.setROISize(4, 4);
   
   if (sensor_initialized)
   {
-    sensor.setDistanceMode(VL53L1X::Long);
+    sensor.setDistanceMode(VL53L1X::Short);
     sensor.setMeasurementTimingBudget(SENSOR_TIMING_BUDGET);
     sensor.startContinuous(SENSOR_WAIT);
     return true;
@@ -209,30 +211,53 @@ private:
   
     if(sensor.timeoutOccurred())
     { 
+      Serial.println("timeout");
       HC05.write(SENSOR_ERROR_TIMEOUT);
-      return;
-    }
-  
-    detection_state = object_detected_in_range(sensor_value);
-  
-    if(detection_state)
-      detection_buffer++;
-    else if(!detection_state)
-      detection_buffer = 0;
-  
-    if((trigger_state == false) && (detection_buffer > SENSOR_DETECTION_BUFFER_MAX))
-    {
-      trigger_state = true;
-      byte cmd[4] = { '[', SENSOR_ID, 0x01, ']' };
-      HC05.write(cmd, 4);
-    } 
-    else if ((trigger_state == true) && (detection_buffer == 0))
-    {
-      trigger_state = false;
-      byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
-      HC05.write(cmd, 4);
+      return 0;
     }
 
+    String signal_status = VL53L1X::rangeStatusToString(sensor.ranging_data.range_status);
+    
+    bool is_error;
+
+    Serial.println(signal_status);
+ 
+    if(signal_status.equals("signal fail"))
+    {
+      detection_buffer = 0;
+
+      if((trigger_state == true)){
+        Serial.println("not detected");
+        trigger_state = false;
+        byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
+        HC05.write(cmd, 4);
+      }
+    } else {
+      Serial.println(sensor_value);
+
+      detection_state = object_detected_in_range(sensor_value);
+    
+      if(detection_state)
+        detection_buffer++;
+      else if(!detection_state)
+        detection_buffer = 0;
+    
+      if((trigger_state == false) && (detection_buffer > SENSOR_DETECTION_BUFFER_MAX))
+      {
+        Serial.println("detected");
+        trigger_state = true;
+        byte cmd[4] = { '[', SENSOR_ID, 0x01, ']' };
+        HC05.write(cmd, 4);
+      } 
+      else if ((trigger_state == true) && (detection_buffer == 0))
+      {
+        Serial.println("not detected");
+        trigger_state = false;
+        byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
+        HC05.write(cmd, 4);
+      }
+    }
+    
     return 0;
   }
 };
