@@ -5,7 +5,6 @@
 #include <SoftwareSerial.h>
 #include <Wire.h>
 #include <VL53L1X.h>
-#include <VariableTimedAction.h>
 
 //================================================
 //  Definitions
@@ -42,7 +41,7 @@
 
 //  Sensor should be unique for each device. values are 0-255 char values, where alphabet chars
 //  are highly reccomended.
-#define SENSOR_ID 'D'
+#define SENSOR_ID 'E'
 #define SENSOR_ERROR_INIT_FAILED 0x30 // '0' Error value for when sensor initialization has timed out.
 #define SENSOR_ERROR_TIMEOUT 0x31 // '1' Error value for when sensor reading has timed out.
 #define SENSOR_DETECTION_BUFFER_MAX 75
@@ -218,6 +217,7 @@ void handleSensor()
     return;
   }
 
+  int signal_status_id = sensor.ranging_data.range_status;
   String signal_status = VL53L1X::rangeStatusToString(sensor.ranging_data.range_status);
   
   bool is_error;
@@ -234,7 +234,7 @@ void handleSensor()
       byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
       HC05.write(cmd, 4);
     }
-  } else {
+  } else if (signal_status_id == 0){
     Serial.println(sensor_value);
 
     detection_state = object_detected_in_range(sensor_value);
