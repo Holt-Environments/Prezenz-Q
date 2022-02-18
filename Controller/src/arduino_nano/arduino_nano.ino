@@ -38,13 +38,14 @@
 
 //  The trigger distance does not have a "real world equivalent" yet. This is a unit-less number.
 #define SENSOR_TRIGGER_DISTANCE 350
+#define DEFAULT_MAX_DISTANCE 1000
 
 //  Sensor should be unique for each device. values are 0-255 char values, where alphabet chars
 //  are highly reccomended.
-#define SENSOR_ID 'E'
+#define SENSOR_ID 'D'
 #define SENSOR_ERROR_INIT_FAILED 0x30 // '0' Error value for when sensor initialization has timed out.
 #define SENSOR_ERROR_TIMEOUT 0x31 // '1' Error value for when sensor reading has timed out.
-#define SENSOR_DETECTION_BUFFER_MAX 5
+#define SENSOR_DETECTION_BUFFER_MAX 75
 
 //  When not using a specific led color channel (When that led color channel is not wired/connected to 
 //  a corresponding Arduino digital pin) its definition should be set to (-1).
@@ -196,73 +197,71 @@ void debugMode()
     HC05.write(Serial.read());
 }
 
-class DetectionController : public VariableTimedAction{
-private:
-  unsigned long run()
-  {
-    static char receipt;
-    static bool detection_state;
-    static int detection_buffer;
-    static bool trigger_state;
+void handleSensor()
+{
+  static char receipt;
+  static bool detection_state;
+  static int detection_buffer;
+  static bool trigger_state;
+  static int sensor_value;
 
-    process_waiting_commands();
-      
-    int sensor_value = sensor.read();
+  process_waiting_commands();
   
-    if(sensor.timeoutOccurred())
-    { 
-      Serial.println("timeout");
-      HC05.write(SENSOR_ERROR_TIMEOUT);
-      return 0;
-    }
-
-    String signal_status = VL53L1X::rangeStatusToString(sensor.ranging_data.range_status);
-    
-    bool is_error;
-
-    Serial.println(signal_status);
- 
-    if(signal_status.equals("signal fail"))
-    {
-      detection_buffer = 0;
-
-      if((trigger_state == true)){
-        Serial.println("not detected");
-        trigger_state = false;
-        byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
-        HC05.write(cmd, 4);
-      }
-    } else {
-      Serial.println(sensor_value);
-
-      detection_state = object_detected_in_range(sensor_value);
-    
-      if(detection_state)
-        detection_buffer++;
-      else if(!detection_state)
-        detection_buffer = 0;
-    
-      if((trigger_state == false) && (detection_buffer > SENSOR_DETECTION_BUFFER_MAX))
-      {
-        Serial.println("detected");
-        trigger_state = true;
-        byte cmd[4] = { '[', SENSOR_ID, 0x01, ']' };
-        HC05.write(cmd, 4);
-      } 
-      else if ((trigger_state == true) && (detection_buffer == 0))
-      {
-        Serial.println("not detected");
-        trigger_state = false;
-        byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
-        HC05.write(cmd, 4);
-      }
-    }
-    
-    return 0;
+  if(sensor.dataReady()){
+    sensor_value = sensor.read(false);
   }
-};
 
-DetectionController detection_controller;
+  if(sensor.timeoutOccurred())
+  { 
+    Serial.println("timeout");
+    HC05.write(SENSOR_ERROR_TIMEOUT);
+    return;
+  }
+
+  String signal_status = VL53L1X::rangeStatusToString(sensor.ranging_data.range_status);
+  
+  bool is_error;
+
+  Serial.println(signal_status);
+
+  if(signal_status.equals("signal fail"))
+  {
+    detection_buffer = 0;
+
+    if((trigger_state == true)){
+      Serial.println("not detected");
+      trigger_state = false;
+      byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
+      HC05.write(cmd, 4);
+    }
+  } else {
+    Serial.println(sensor_value);
+
+    detection_state = object_detected_in_range(sensor_value);
+  
+    if(detection_state)
+      detection_buffer++;
+    else if(!detection_state)
+      detection_buffer = 0;
+  
+    if((trigger_state == false) && (detection_buffer > SENSOR_DETECTION_BUFFER_MAX))
+    {
+      Serial.println("detected");
+      trigger_state = true;
+      byte cmd[4] = { '[', SENSOR_ID, 0x01, ']' };
+      HC05.write(cmd, 4);
+    } 
+    else if ((trigger_state == true) && (detection_buffer == 0))
+    {
+      Serial.println("not detected");
+      trigger_state = false;
+      byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
+      HC05.write(cmd, 4);
+    }
+  }
+  
+  return;
+}
 
 String error;
 
@@ -295,7 +294,6 @@ void setup()
     ledCommand = &ledOff;
     HC05.begin(BT_BAUD);
     executeCode = &defaultMode;
-    detection_controller.start(50);
   }
 }
 
@@ -304,5 +302,5 @@ void loop()
   if(executeCode != NULL)
     (*executeCode)();
 
-  VariableTimedAction::updateActions(); // C++
+  handleSensor();
 }
