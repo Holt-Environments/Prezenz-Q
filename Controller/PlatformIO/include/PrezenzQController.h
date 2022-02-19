@@ -3,16 +3,16 @@
 
 namespace HoltEnvironments {
 
-namespace PrezenzQController {
+namespace PrezenzQ {
 
-void init();
+class Controller {
 
-} // PrezenzQController
+public:
+  
+private:
+
+};
+
+} // PrezenzQ
 
 } // HoltEnvironments
-
-
-void HoltEnvironments::PrezenzQController::init()
-{
-  Serial.println("test");
-}

@@ -1,0 +1,48 @@
+\hypertarget{_led_driver_8h_source}{}\doxysection{Led\+Driver.\+h}
+\label{_led_driver_8h_source}\index{include/LedDriver.h@{include/LedDriver.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 }
+\DoxyCodeLine{2 \textcolor{comment}{/*}}
+\DoxyCodeLine{3 \textcolor{comment}{LedDriver.h}}
+\DoxyCodeLine{4 \textcolor{comment}{AUTHOR: Anthony Mesa}}
+\DoxyCodeLine{5 \textcolor{comment}{*/}}
+\DoxyCodeLine{6 }
+\DoxyCodeLine{7 \textcolor{preprocessor}{\#pragma once}}
+\DoxyCodeLine{8 }
+\DoxyCodeLine{9 \textcolor{keyword}{namespace }HoltEnvironments \{}
+\DoxyCodeLine{10 }
+\DoxyCodeLine{11 \textcolor{keyword}{namespace }PrezenzQ \{}
+\DoxyCodeLine{12 }
+\DoxyCodeLine{13 \textcolor{keyword}{class }\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver}{LedDriver}} \{}
+\DoxyCodeLine{14 }
+\DoxyCodeLine{15 \textcolor{keyword}{public}:}
+\DoxyCodeLine{16 }
+\DoxyCodeLine{17   \textcolor{keyword}{enum} State \{ OFF, WAITING, ON \};}
+\DoxyCodeLine{18 }
+\DoxyCodeLine{19   \textcolor{keyword}{static} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a496301c012199683e139282805ab20ff}{init}}();}
+\DoxyCodeLine{20   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_aabaefc495af58d0ab85e2b8a799561f0}{setState}}(State \_state);}
+\DoxyCodeLine{21   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac85523f01d5b559dcf32158939b05818}{update}}();}
+\DoxyCodeLine{22 }
+\DoxyCodeLine{23 \textcolor{keyword}{private}:}
+\DoxyCodeLine{24 }
+\DoxyCodeLine{25   \textcolor{keyword}{typedef} \textcolor{keyword}{struct }led\_color\_s \{}
+\DoxyCodeLine{26     \textcolor{keywordtype}{int} r;}
+\DoxyCodeLine{27     \textcolor{keywordtype}{int} g;}
+\DoxyCodeLine{28     \textcolor{keywordtype}{int} b;}
+\DoxyCodeLine{29     \textcolor{keywordtype}{int} w;}
+\DoxyCodeLine{30   \} LedColor;}
+\DoxyCodeLine{31 }
+\DoxyCodeLine{32   \textcolor{keyword}{static} void (*generateLedValue)(LedColor *\_color);}
+\DoxyCodeLine{33   \textcolor{keyword}{static} \textcolor{keywordtype}{void} ledLoopOff(LedColor *\_color);}
+\DoxyCodeLine{34   \textcolor{keyword}{static} \textcolor{keywordtype}{void} ledLoopWaiting(LedColor *\_color);}
+\DoxyCodeLine{35   \textcolor{keyword}{static} \textcolor{keywordtype}{void} ledLoopOn(LedColor *\_color);}
+\DoxyCodeLine{36 }
+\DoxyCodeLine{37 \};}
+\DoxyCodeLine{38 }
+\DoxyCodeLine{39 \} \textcolor{comment}{//  PrezenzQ}}
+\DoxyCodeLine{40 }
+\DoxyCodeLine{41 \} \textcolor{comment}{//  HoltEnvironments}}
+\DoxyCodeLine{42 }
+
+\end{DoxyCode}
