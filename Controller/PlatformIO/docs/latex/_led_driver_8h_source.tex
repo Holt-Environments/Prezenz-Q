@@ -1,6 +1,6 @@
 \hypertarget{_led_driver_8h_source}{}\doxysection{Led\+Driver.\+h}
-\label{_led_driver_8h_source}\index{include/LedDriver.h@{include/LedDriver.h}}
-
+\label{_led_driver_8h_source}\index{D:/Home/Documents/Projects/Work/Prezenz-\/Q/Controller/PlatformIO/include/LedDriver.h@{D:/Home/Documents/Projects/Work/Prezenz-\/Q/Controller/PlatformIO/include/LedDriver.h}}
+\mbox{\hyperlink{_led_driver_8h}{Go to the documentation of this file.}}
 \begin{DoxyCode}{0}
 \DoxyCodeLine{1 }
 \DoxyCodeLine{2 \textcolor{comment}{/*}}
@@ -10,7 +10,7 @@
 \DoxyCodeLine{6 }
 \DoxyCodeLine{7 \textcolor{preprocessor}{\#pragma once}}
 \DoxyCodeLine{8 }
-\DoxyCodeLine{9 \textcolor{keyword}{namespace }HoltEnvironments \{}
+\DoxyCodeLine{9 \textcolor{keyword}{namespace }\mbox{\hyperlink{namespace_holt_environments}{HoltEnvironments}} \{}
 \DoxyCodeLine{10 }
 \DoxyCodeLine{11 \textcolor{keyword}{namespace }PrezenzQ \{}
 \DoxyCodeLine{12 }
@@ -18,31 +18,47 @@
 \DoxyCodeLine{14 }
 \DoxyCodeLine{15 \textcolor{keyword}{public}:}
 \DoxyCodeLine{16 }
-\DoxyCodeLine{17   \textcolor{keyword}{enum} State \{ OFF, WAITING, ON \};}
-\DoxyCodeLine{18 }
-\DoxyCodeLine{19   \textcolor{keyword}{static} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a496301c012199683e139282805ab20ff}{init}}();}
-\DoxyCodeLine{20   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_aabaefc495af58d0ab85e2b8a799561f0}{setState}}(State \_state);}
-\DoxyCodeLine{21   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac85523f01d5b559dcf32158939b05818}{update}}();}
-\DoxyCodeLine{22 }
-\DoxyCodeLine{23 \textcolor{keyword}{private}:}
-\DoxyCodeLine{24 }
-\DoxyCodeLine{25   \textcolor{keyword}{typedef} \textcolor{keyword}{struct }led\_color\_s \{}
-\DoxyCodeLine{26     \textcolor{keywordtype}{int} r;}
-\DoxyCodeLine{27     \textcolor{keywordtype}{int} g;}
-\DoxyCodeLine{28     \textcolor{keywordtype}{int} b;}
-\DoxyCodeLine{29     \textcolor{keywordtype}{int} w;}
-\DoxyCodeLine{30   \} LedColor;}
-\DoxyCodeLine{31 }
-\DoxyCodeLine{32   \textcolor{keyword}{static} void (*generateLedValue)(LedColor *\_color);}
-\DoxyCodeLine{33   \textcolor{keyword}{static} \textcolor{keywordtype}{void} ledLoopOff(LedColor *\_color);}
-\DoxyCodeLine{34   \textcolor{keyword}{static} \textcolor{keywordtype}{void} ledLoopWaiting(LedColor *\_color);}
-\DoxyCodeLine{35   \textcolor{keyword}{static} \textcolor{keywordtype}{void} ledLoopOn(LedColor *\_color);}
-\DoxyCodeLine{36 }
-\DoxyCodeLine{37 \};}
+\DoxyCodeLine{20   \textcolor{keyword}{enum} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05}{State}} \{ \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05addf2c4e7bfe28633fe2c6663af843d02}{OFF}}, \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05a27017512a2beec54e0f472be4ac7f16d}{WAITING}}, \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05a9df98deaefd469ce73dd62317bda548f}{ON}} \};}
+\DoxyCodeLine{21 }
+\DoxyCodeLine{22   \textcolor{keyword}{static} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a496301c012199683e139282805ab20ff}{init}}();}
+\DoxyCodeLine{23   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_aabaefc495af58d0ab85e2b8a799561f0}{setState}}(\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05}{State}} \_state);}
+\DoxyCodeLine{24   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac85523f01d5b559dcf32158939b05818}{update}}();}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{26 \textcolor{keyword}{private}:}
+\DoxyCodeLine{27 }
+\DoxyCodeLine{32   \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color}{led\_color}} \{}
+\DoxyCodeLine{33     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color_ab0ec894d19770a1585dd6031d3e0b154}{r}};}
+\DoxyCodeLine{34     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color_abddb6d1b69e13fe56cba372cda8c47b1}{g}};}
+\DoxyCodeLine{35     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color_abf04bf3e62893fbc8a6e9a822d9af51f}{b}};}
+\DoxyCodeLine{36     \textcolor{keywordtype}{unsigned} \textcolor{keywordtype}{char} \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color_a6f6332447415e49195e3577e04cfa4df}{w}};}
+\DoxyCodeLine{37   \} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{LedColor}};}
 \DoxyCodeLine{38 }
-\DoxyCodeLine{39 \} \textcolor{comment}{//  PrezenzQ}}
+\DoxyCodeLine{39   \textcolor{keyword}{typedef} void (*\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a99a889f48aaa7b96d8f2479ed2f9adab}{ledValueGeneratingFunction}})(\textcolor{keywordtype}{long} \_current\_millis, \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color}{LedColor}} *\_color);}
 \DoxyCodeLine{40 }
-\DoxyCodeLine{41 \} \textcolor{comment}{//  HoltEnvironments}}
-\DoxyCodeLine{42 }
+\DoxyCodeLine{41   \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1generator__state}{generator\_state}} \{}
+\DoxyCodeLine{42     \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a99a889f48aaa7b96d8f2479ed2f9adab}{ledValueGeneratingFunction}} \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1generator__state_ac32211c180116d021912ba83d9edc820}{current}};}
+\DoxyCodeLine{43     \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a99a889f48aaa7b96d8f2479ed2f9adab}{ledValueGeneratingFunction}} \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1generator__state_ada41d83463eefd1c6c0c7c32e8f4f0f6}{previous}};}
+\DoxyCodeLine{44   \} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_af6e8692ca07acf41767e26f2616f94c7}{GeneratorState}};}
+\DoxyCodeLine{45 }
+\DoxyCodeLine{46   \textcolor{keyword}{static} \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1generator__state}{GeneratorState}} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ab029160e22ebd77aefc69074b4aa757a}{led\_value\_generator}};}
+\DoxyCodeLine{47 }
+\DoxyCodeLine{48   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a3d4f07546532a24f4e1d680d6edae9e3}{updateGenerator}}(\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a99a889f48aaa7b96d8f2479ed2f9adab}{ledValueGeneratingFunction}} \_function);}
+\DoxyCodeLine{49 }
+\DoxyCodeLine{50   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a4c9aabb86e2ebbba4c951d314e67f3f1}{ledLoopOff}}(\textcolor{keywordtype}{long} \_current\_millis, \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color}{LedColor}} *\_color);}
+\DoxyCodeLine{51   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_abfbbb8d6f314b10064c9f396ad4254f0}{ledLoopWaiting}}(\textcolor{keywordtype}{long} \_current\_millis, \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color}{LedColor}} *\_color);}
+\DoxyCodeLine{52   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a130f3b3827f4b7ae94cbf0d4407617a3}{ledLoopOn}}(\textcolor{keywordtype}{long} \_current\_millis, \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color}{LedColor}} *\_color);}
+\DoxyCodeLine{53 }
+\DoxyCodeLine{54   \textcolor{keyword}{static} \textcolor{keywordtype}{int} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a81d512bea69f4a1f50cf761087f69cf8}{transition\_index}};}
+\DoxyCodeLine{55   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a3662d7814091bd73d987fe4846b3beef}{resetTransitionIndex}}();}
+\DoxyCodeLine{56 }
+\DoxyCodeLine{57   \textcolor{keyword}{static} \textcolor{keywordtype}{void} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ad56f06c9614cf7cf6dd90f472db0890c}{setLedColor}}(\mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color}{LedColor}} *\_current\_color);}
+\DoxyCodeLine{58 }
+\DoxyCodeLine{59   \textcolor{keyword}{static} \textcolor{keywordtype}{float} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a58e96db0b975f29ec6028c64b85cced3}{sin\_wave}}(\textcolor{keywordtype}{int} \_i, \textcolor{keywordtype}{int} \_period);}
+\DoxyCodeLine{60 \};}
+\DoxyCodeLine{61 }
+\DoxyCodeLine{62 \} \textcolor{comment}{//  PrezenzQ}}
+\DoxyCodeLine{63 }
+\DoxyCodeLine{64 \} \textcolor{comment}{//  HoltEnvironments}}
+\DoxyCodeLine{65 }
 
 \end{DoxyCode}

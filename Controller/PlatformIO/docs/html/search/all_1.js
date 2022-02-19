@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['init_0',['init',['../class_holt_environments_1_1_prezenz_q_1_1_led_driver.html#a496301c012199683e139282805ab20ff',1,'HoltEnvironments::PrezenzQ::LedDriver']]]
+  ['controller_0',['Controller',['../class_holt_environments_1_1_prezenz_q_1_1_controller.html',1,'HoltEnvironments::PrezenzQ']]],
+  ['current_1',['current',['../struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1generator__state.html#ac32211c180116d021912ba83d9edc820',1,'HoltEnvironments::PrezenzQ::LedDriver::generator_state']]]
 ];

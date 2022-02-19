@@ -1,12 +1,22 @@
 \hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver}{}\doxysection{Holt\+Environments\+::PrezenzQ\+::Led\+Driver Class Reference}
 \label{class_holt_environments_1_1_prezenz_q_1_1_led_driver}\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+
+
+{\ttfamily \#include $<$Led\+Driver.\+h$>$}
+
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1generator__state}{generator\+\_\+state}}
+\item 
+struct \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color}{led\+\_\+color}}
+\end{DoxyCompactItemize}
 \doxysubsection*{Public Types}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05}} 
-enum {\bfseries State} \{ {\bfseries OFF}
-, {\bfseries WAITING}
-, {\bfseries ON}
+enum \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05}{State}} \{ \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05addf2c4e7bfe28633fe2c6663af843d02}{OFF}}
+, \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05a27017512a2beec54e0f472be4ac7f16d}{WAITING}}
+, \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05a9df98deaefd469ce73dd62317bda548f}{ON}}
  \}
 \end{DoxyCompactItemize}
 \doxysubsection*{Static Public Member Functions}
@@ -14,10 +24,87 @@ enum {\bfseries State} \{ {\bfseries OFF}
 \item 
 static int \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a496301c012199683e139282805ab20ff}{init}} ()
 \item 
-static void \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_aabaefc495af58d0ab85e2b8a799561f0}{set\+State}} (State \+\_\+state)
+static void \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_aabaefc495af58d0ab85e2b8a799561f0}{set\+State}} (\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05}{State}} \+\_\+state)
 \item 
 static void \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac85523f01d5b559dcf32158939b05818}{update}} ()
 \end{DoxyCompactItemize}
+\doxysubsection*{Private Types}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color}{Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::led\+\_\+color}} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Led\+Color}}
+\item 
+typedef void($\ast$ \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a99a889f48aaa7b96d8f2479ed2f9adab}{led\+Value\+Generating\+Function}}) (long \+\_\+current\+\_\+millis, \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Led\+Color}} $\ast$\+\_\+color)
+\item 
+typedef struct \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1generator__state}{Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::generator\+\_\+state}} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_af6e8692ca07acf41767e26f2616f94c7}{Generator\+State}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static void \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a3d4f07546532a24f4e1d680d6edae9e3}{update\+Generator}} (\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a99a889f48aaa7b96d8f2479ed2f9adab}{led\+Value\+Generating\+Function}} \+\_\+function)
+\item 
+static void \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a4c9aabb86e2ebbba4c951d314e67f3f1}{led\+Loop\+Off}} (long \+\_\+current\+\_\+millis, \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Led\+Color}} $\ast$\+\_\+color)
+\item 
+static void \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_abfbbb8d6f314b10064c9f396ad4254f0}{led\+Loop\+Waiting}} (long \+\_\+current\+\_\+millis, \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Led\+Color}} $\ast$\+\_\+color)
+\item 
+static void \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a130f3b3827f4b7ae94cbf0d4407617a3}{led\+Loop\+On}} (long \+\_\+current\+\_\+millis, \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Led\+Color}} $\ast$\+\_\+color)
+\item 
+static void \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a3662d7814091bd73d987fe4846b3beef}{reset\+Transition\+Index}} ()
+\item 
+static void \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ad56f06c9614cf7cf6dd90f472db0890c}{set\+Led\+Color}} (\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Led\+Color}} $\ast$\+\_\+current\+\_\+color)
+\item 
+static float \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a58e96db0b975f29ec6028c64b85cced3}{sin\+\_\+wave}} (int \+\_\+i, int \+\_\+period)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_af6e8692ca07acf41767e26f2616f94c7}{Generator\+State}} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ab029160e22ebd77aefc69074b4aa757a}{led\+\_\+value\+\_\+generator}}
+\item 
+static int \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a81d512bea69f4a1f50cf761087f69cf8}{transition\+\_\+index}} = 0
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Typedef Documentation}
+\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_af6e8692ca07acf41767e26f2616f94c7}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_af6e8692ca07acf41767e26f2616f94c7}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!GeneratorState@{GeneratorState}}
+\index{GeneratorState@{GeneratorState}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{GeneratorState}{GeneratorState}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1generator__state}{Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::generator\+\_\+state}} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_af6e8692ca07acf41767e26f2616f94c7}{Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::\+Generator\+State}}\hspace{0.3cm}{\ttfamily [private]}}
+
+\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!LedColor@{LedColor}}
+\index{LedColor@{LedColor}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{LedColor}{LedColor}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{struct_holt_environments_1_1_prezenz_q_1_1_led_driver_1_1led__color}{Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::led\+\_\+color}} \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::\+Led\+Color}}\hspace{0.3cm}{\ttfamily [private]}}
+
+Contains the Arduino PWM values that will be sent to the corresponding PWM pins to control the brightness of the led channels. \mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a99a889f48aaa7b96d8f2479ed2f9adab}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a99a889f48aaa7b96d8f2479ed2f9adab}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!ledValueGeneratingFunction@{ledValueGeneratingFunction}}
+\index{ledValueGeneratingFunction@{ledValueGeneratingFunction}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{ledValueGeneratingFunction}{ledValueGeneratingFunction}}
+{\footnotesize\ttfamily typedef void($\ast$ Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::led\+Value\+Generating\+Function) (long \+\_\+current\+\_\+millis, \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Led\+Color}} $\ast$\+\_\+color)\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+\doxysubsection{Member Enumeration Documentation}
+\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!State@{State}}
+\index{State@{State}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{State}{State}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05}{Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::\+State}}}
+
+The state of the driver. Each state corresponds to a looping function in the driver. \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{OFF@{OFF}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!OFF@{OFF}}}\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05addf2c4e7bfe28633fe2c6663af843d02}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05addf2c4e7bfe28633fe2c6663af843d02}} 
+OFF&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{WAITING@{WAITING}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!WAITING@{WAITING}}}\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05a27017512a2beec54e0f472be4ac7f16d}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05a27017512a2beec54e0f472be4ac7f16d}} 
+WAITING&\\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{ON@{ON}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!ON@{ON}}}\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05a9df98deaefd469ce73dd62317bda548f}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05a9df98deaefd469ce73dd62317bda548f}} 
+ON&\\
+\hline
+
+\end{DoxyEnumFields}
 
 
 \doxysubsection{Member Function Documentation}
@@ -37,21 +124,100 @@ Initialization includes setting the related pins for the LED and setting the sta
 \begin{DoxyReturn}{Returns}
 int 
 \end{DoxyReturn}
+\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a4c9aabb86e2ebbba4c951d314e67f3f1}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a4c9aabb86e2ebbba4c951d314e67f3f1}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!ledLoopOff@{ledLoopOff}}
+\index{ledLoopOff@{ledLoopOff}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{ledLoopOff()}{ledLoopOff()}}
+{\footnotesize\ttfamily void Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::led\+Loop\+Off (\begin{DoxyParamCaption}\item[{long}]{\+\_\+current\+\_\+millis,  }\item[{\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Led\+Color}} $\ast$}]{\+\_\+color }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+Updates the rgbw values of the Led\+Color struct parameter provided to display the led strip\textquotesingle{}s off state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+color} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a130f3b3827f4b7ae94cbf0d4407617a3}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a130f3b3827f4b7ae94cbf0d4407617a3}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!ledLoopOn@{ledLoopOn}}
+\index{ledLoopOn@{ledLoopOn}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{ledLoopOn()}{ledLoopOn()}}
+{\footnotesize\ttfamily void Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::led\+Loop\+On (\begin{DoxyParamCaption}\item[{long}]{\+\_\+current\+\_\+millis,  }\item[{\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Led\+Color}} $\ast$}]{\+\_\+color }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+Updates the rgbw values of the Led\+Color struct parameter provided to display the led strip\textquotesingle{}s on state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+color} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_abfbbb8d6f314b10064c9f396ad4254f0}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_abfbbb8d6f314b10064c9f396ad4254f0}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!ledLoopWaiting@{ledLoopWaiting}}
+\index{ledLoopWaiting@{ledLoopWaiting}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{ledLoopWaiting()}{ledLoopWaiting()}}
+{\footnotesize\ttfamily void Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::led\+Loop\+Waiting (\begin{DoxyParamCaption}\item[{long}]{\+\_\+current\+\_\+millis,  }\item[{\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Led\+Color}} $\ast$}]{\+\_\+color }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+Updates the rgbw values of the Led\+Color struct parameter provided to display the led strip\textquotesingle{}s waiting state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+color} & \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a3662d7814091bd73d987fe4846b3beef}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a3662d7814091bd73d987fe4846b3beef}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!resetTransitionIndex@{resetTransitionIndex}}
+\index{resetTransitionIndex@{resetTransitionIndex}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{resetTransitionIndex()}{resetTransitionIndex()}}
+{\footnotesize\ttfamily void Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::reset\+Transition\+Index (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+Sets the transition index back to 0. \mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ad56f06c9614cf7cf6dd90f472db0890c}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ad56f06c9614cf7cf6dd90f472db0890c}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!setLedColor@{setLedColor}}
+\index{setLedColor@{setLedColor}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{setLedColor()}{setLedColor()}}
+{\footnotesize\ttfamily void Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::set\+Led\+Color (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a54693505565915a1555f8df156a0a74c}{Led\+Color}} $\ast$}]{\+\_\+current\+\_\+color }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+Sets the LED color. The led color set is linearly interpolated between the previous LED state and the current LED state.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+current\+\_\+color} & Pointer to the struct holding the current color to be sent to the led strip. \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_aabaefc495af58d0ab85e2b8a799561f0}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_aabaefc495af58d0ab85e2b8a799561f0}} 
 \index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!setState@{setState}}
 \index{setState@{setState}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
 \doxysubsubsection{\texorpdfstring{setState()}{setState()}}
-{\footnotesize\ttfamily void Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::set\+State (\begin{DoxyParamCaption}\item[{State}]{\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+{\footnotesize\ttfamily void Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::set\+State (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05}{State}}}]{\+\_\+state }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
 Sets the state of the driver.
 
 Setting the state of the driver updates the function being used to generate the corresponding LED color/pattern;
 
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac97d02e81f23f7d421a9827dfd7cbc05}{State}}
+\end{DoxySeeAlso}
 
 \begin{DoxyParams}{Parameters}
 {\em \+\_\+state} & Initial state that the controller should start with. \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a58e96db0b975f29ec6028c64b85cced3}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a58e96db0b975f29ec6028c64b85cced3}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!sin\_wave@{sin\_wave}}
+\index{sin\_wave@{sin\_wave}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{sin\_wave()}{sin\_wave()}}
+{\footnotesize\ttfamily float Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::sin\+\_\+wave (\begin{DoxyParamCaption}\item[{int}]{\+\_\+i,  }\item[{int}]{\+\_\+period }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+Math function that returns the appropriate Y value, where the X input value is the ratio of the current index vs. the full period length.
+
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+i} & The current index of the sin function. \\
+\hline
+{\em \+\_\+period} & The domain value representing a full period in the sin wave. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+float 
+\end{DoxyReturn}
 \mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac85523f01d5b559dcf32158939b05818}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ac85523f01d5b559dcf32158939b05818}} 
 \index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!update@{update}}
 \index{update@{update}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
@@ -60,9 +226,51 @@ Setting the state of the driver updates the function being used to generate the 
 
 Updates the pins of the Arduino with the values generated by the function pointed to by the generate\+Led\+Value function pointer.
 
-A static Led\+Color struct contains the rgb values to be sent to the led strip. the address of this struct is passed to the generating function so that it can update the values stored in the static color struct. 
+A static Led\+Color struct contains the rgb values to be sent to the led strip. The address of this struct is passed to the generating function so that it can update the values stored in the static color struct.
+
+\begin{DoxySeeAlso}{See also}
+\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ab029160e22ebd77aefc69074b4aa757a}{led\+\_\+value\+\_\+generator}} 
+
+\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a4c9aabb86e2ebbba4c951d314e67f3f1}{led\+Loop\+Off()}} 
+
+\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_abfbbb8d6f314b10064c9f396ad4254f0}{led\+Loop\+Waiting()}} 
+
+\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a130f3b3827f4b7ae94cbf0d4407617a3}{led\+Loop\+On()}} 
+\end{DoxySeeAlso}
+\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a3d4f07546532a24f4e1d680d6edae9e3}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a3d4f07546532a24f4e1d680d6edae9e3}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!updateGenerator@{updateGenerator}}
+\index{updateGenerator@{updateGenerator}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{updateGenerator()}{updateGenerator()}}
+{\footnotesize\ttfamily void Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::update\+Generator (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a99a889f48aaa7b96d8f2479ed2f9adab}{led\+Value\+Generating\+Function}}}]{\+\_\+function }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+Updates the current and previous functions contained in the LED value generator structure. Since this indicates that a transition between LED states is taking place, reset\+Transition\+State is called.
+
+\begin{DoxySeeAlso}{See also}
+reset\+Transition\+State
+\end{DoxySeeAlso}
+
+\begin{DoxyParams}{Parameters}
+{\em \+\_\+function} & The function address to be assigned to the generator\textquotesingle{}s current function pointer. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ab029160e22ebd77aefc69074b4aa757a}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_ab029160e22ebd77aefc69074b4aa757a}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!led\_value\_generator@{led\_value\_generator}}
+\index{led\_value\_generator@{led\_value\_generator}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{led\_value\_generator}{led\_value\_generator}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_holt_environments_1_1_prezenz_q_1_1_led_driver_af6e8692ca07acf41767e26f2616f94c7}{Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::\+Generator\+State}} Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::led\+\_\+value\+\_\+generator\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+Structure containing two mutable function pointers. The current function pointer references the led generating function to use for setting the LEDs. The previous function pointer references the most recent generating function, which is used in transitioning between led states. \mbox{\Hypertarget{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a81d512bea69f4a1f50cf761087f69cf8}\label{class_holt_environments_1_1_prezenz_q_1_1_led_driver_a81d512bea69f4a1f50cf761087f69cf8}} 
+\index{HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}!transition\_index@{transition\_index}}
+\index{transition\_index@{transition\_index}!HoltEnvironments::PrezenzQ::LedDriver@{HoltEnvironments::PrezenzQ::LedDriver}}
+\doxysubsubsection{\texorpdfstring{transition\_index}{transition\_index}}
+{\footnotesize\ttfamily int Holt\+Environments\+::\+Prezenz\+Q\+::\+Led\+Driver\+::transition\+\_\+index = 0\hspace{0.3cm}{\ttfamily [static]}, {\ttfamily [private]}}
+
+Indicates the current transition frame to be calculated within the transition space whose frame length is defined by TRANSITION\+\_\+\+PERIOD. 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
 \item 
-include/Led\+Driver.\+h\item 
-src/Led\+Driver.\+cpp\end{DoxyCompactItemize}
+D\+:/\+Home/\+Documents/\+Projects/\+Work/\+Prezenz-\/\+Q/\+Controller/\+Platform\+IO/include/\mbox{\hyperlink{_led_driver_8h}{Led\+Driver.\+h}}\item 
+D\+:/\+Home/\+Documents/\+Projects/\+Work/\+Prezenz-\/\+Q/\+Controller/\+Platform\+IO/src/\mbox{\hyperlink{_led_driver_8cpp}{Led\+Driver.\+cpp}}\end{DoxyCompactItemize}
