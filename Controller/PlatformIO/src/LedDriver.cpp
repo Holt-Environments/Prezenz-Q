@@ -6,27 +6,8 @@ AUTHOR: Anthony Mesa
 Provides basic functionality for controlling a non-addressable LED strip via arduino.
 */
 
-/*
-================================================================================
-    Libraries
-================================================================================
-*/
-
 #include "Arduino.h"
 #include "LedDriver.h"
-
-/*
-================================================================================
-  Definitions
-================================================================================
-*/
-
-#define LED_R -1
-#define LED_G -1
-#define LED_B 13
-#define LED_W -1
-#define SIN_PERIOD 3000 // ms
-#define TRANSITION_MAX_INDEX 10// ms
 
 /**
  * Structure containing two mutable function pointers. The current function pointer references the led
