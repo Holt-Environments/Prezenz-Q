@@ -56,7 +56,8 @@ private:
 
   static void setLedColor(LedColor *_current_color);
 
-  static float sin_wave(int _i, int _period);
+  static float sin_wave(unsigned long _millis, int _period, int _offset);
+  static unsigned char lerp(unsigned char _a, unsigned char _b, float _t);
 };
 
 } //  PrezenzQ

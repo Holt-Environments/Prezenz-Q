@@ -83,12 +83,27 @@ bool sensor_initialized;
 
 void setup()
 {
-  Serial.println();
+  Serial.begin(9600);
+  HoltEnvironments::PrezenzQ::LedDriver::init();
+  HoltEnvironments::PrezenzQ::LedDriver::setState(HoltEnvironments::PrezenzQ::LedDriver::State::WAITING);
 }
 
 void loop()
 {
-  HoltEnvironments::PrezenzQ::LedDriver::update();
+  unsigned long elapsed = millis();
 
+  unsigned long value = elapsed % 4000;
+  
+  static bool state_set = false;
+
+  if(state_set && (value > 2000)){
+    state_set = false;
+    HoltEnvironments::PrezenzQ::LedDriver::setState(HoltEnvironments::PrezenzQ::LedDriver::State::ON);
+  } else if (!state_set && (value <= 2000)){
+    state_set = true;
+    HoltEnvironments::PrezenzQ::LedDriver::setState(HoltEnvironments::PrezenzQ::LedDriver::State::OFF);
+  }
+
+  HoltEnvironments::PrezenzQ::LedDriver::update();
 }
 
