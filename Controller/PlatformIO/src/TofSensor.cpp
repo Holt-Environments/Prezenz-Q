@@ -61,6 +61,7 @@ void TofSensor::update() {
   static int sensor_value;
   
   if(sensor.dataReady()){
+    Serial.println("reading value...");    
     sensor_value = sensor.read(false);
     Serial.println(sensor_value);
   } else {
@@ -74,7 +75,9 @@ void TofSensor::update() {
   }
 
   int signal_status_id = sensor.ranging_data.range_status;
-  
+  Serial.print("status: ");
+  Serial.println(signal_status_id);
+
   if(signal_status_id != 0)
   {
     Serial.println("failed");

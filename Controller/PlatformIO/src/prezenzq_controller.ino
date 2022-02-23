@@ -90,7 +90,7 @@ void onNotDetected() {
 void setup()
 {
   Serial.begin(ARDUINO_SERIAL_BAUD);
-  Serial.println(TofSensor::init(&onDetected, &onNotDetected);
+  Serial.println(TofSensor::init(&onDetected, &onNotDetected));
 }
 
 void loop()
