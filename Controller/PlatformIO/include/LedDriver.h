@@ -13,7 +13,6 @@ AUTHOR: Anthony Mesa
 #define SIN_PERIOD 3000 // ms
 #define TRANSITION_MAX_INDEX 10// ms
 
-
 namespace HoltEnvironments {
 
 namespace PrezenzQ {

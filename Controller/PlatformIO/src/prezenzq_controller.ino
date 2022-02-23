@@ -6,10 +6,9 @@
 */
 
 #include <SoftwareSerial.h>
-#include <Wire.h>
-#include <VL53L1X.h>
 #include "PrezenzQController.h"
 #include "LedDriver.h"
+#include "TofSensor.h"
 
 /*
 ================================================================================
@@ -47,21 +46,20 @@ alphabet chars are highly reccomended.
 #define BT_TX 7
 #define BT_BAUD 9600
 #define BT_DEBUG_ENABLED A0
-#define SENSOR_XSHUT 6
-#define SENSOR_I2C_CLOCK 400000
-#define SENSOR_TIMEOUT 0 // ms
-#define SENSOR_TIMING_BUDGET_MS 200 // ms
-#define SENSOR_WAIT_MS 200 // ms
-#define SENSOR_TIMING_BUDGET ((long)SENSOR_TIMING_BUDGET_MS * 1000) // us
-#define SENSOR_WAIT (SENSOR_TIMING_BUDGET_MS + SENSOR_WAIT_MS)
-#define SENSOR_TRIGGER_DISTANCE 350
 #define DEFAULT_MAX_DISTANCE 1000
 #define SENSOR_ID 'E'
 #define SENSOR_ERROR_INIT_FAILED 0x30 // '0'
 #define SENSOR_ERROR_TIMEOUT 0x31 // '1'
-#define SENSOR_DETECTION_BUFFER_MAX 75
 #define ARDUINO_LED 13
 #define ARDUINO_SERIAL_BAUD 9600
+
+/*
+================================================================================
+    Namespaces
+================================================================================
+*/
+
+using HoltEnvironments::PrezenzQ::TofSensor;
 
 /*
 ================================================================================
@@ -81,29 +79,22 @@ bool sensor_initialized;
 ================================================================================
 */
 
+void onDetected() {
+  Serial.println("detected!");
+}
+
+void onNotDetected() {
+  Serial.println("not detected!");
+}
+
 void setup()
 {
-  Serial.begin(9600);
-  HoltEnvironments::PrezenzQ::LedDriver::init();
-  HoltEnvironments::PrezenzQ::LedDriver::setState(HoltEnvironments::PrezenzQ::LedDriver::State::WAITING);
+  Serial.begin(ARDUINO_SERIAL_BAUD);
+  Serial.println(TofSensor::init(&onDetected, &onNotDetected);
 }
 
 void loop()
 {
-  unsigned long elapsed = millis();
-
-  unsigned long value = elapsed % 4000;
-  
-  static bool state_set = false;
-
-  if(state_set && (value > 2000)){
-    state_set = false;
-    HoltEnvironments::PrezenzQ::LedDriver::setState(HoltEnvironments::PrezenzQ::LedDriver::State::ON);
-  } else if (!state_set && (value <= 2000)){
-    state_set = true;
-    HoltEnvironments::PrezenzQ::LedDriver::setState(HoltEnvironments::PrezenzQ::LedDriver::State::OFF);
-  }
-
-  HoltEnvironments::PrezenzQ::LedDriver::update();
+  TofSensor::update();
 }
 

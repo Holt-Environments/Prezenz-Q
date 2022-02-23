@@ -9,17 +9,19 @@ Provides basic functionality for controlling a non-addressable LED strip via ard
 #include "Arduino.h"
 #include "LedDriver.h"
 
+using HoltEnvironments::PrezenzQ::LedDriver;
+
 /**
  * Structure containing two mutable function pointers. The current function pointer references the led
  * generating function to use for setting the LEDs. The previous function pointer references the most 
  * recent generating function, which is used in transitioning between led states.
  */
-HoltEnvironments::PrezenzQ::LedDriver::GeneratorState HoltEnvironments::PrezenzQ::LedDriver::led_value_generator;
+LedDriver::GeneratorState LedDriver::led_value_generator;
 
 /**
  * Indicates the current transition frame to be calculated within the transition space whose frame length is defined by TRANSITION_PERIOD.
  */
-int HoltEnvironments::PrezenzQ::LedDriver::transition_index;
+int LedDriver::transition_index;
 
 /**
  * Initializes the driver.
@@ -30,7 +32,7 @@ int HoltEnvironments::PrezenzQ::LedDriver::transition_index;
  * @see setState()
  * @return int 
  */
-int HoltEnvironments::PrezenzQ::LedDriver::init() {
+int LedDriver::init() {
 
   resetTransitionIndex();
 
@@ -62,7 +64,7 @@ int HoltEnvironments::PrezenzQ::LedDriver::init() {
 /**
  * Sets the transition index back to 0.
  */
-void HoltEnvironments::PrezenzQ::LedDriver::resetTransitionIndex()
+void LedDriver::resetTransitionIndex()
 {
   transition_index = 0;
 }
@@ -75,7 +77,7 @@ void HoltEnvironments::PrezenzQ::LedDriver::resetTransitionIndex()
  * 
  * @param _function The function address to be assigned to the generator's current function pointer.
  */
-void HoltEnvironments::PrezenzQ::LedDriver::updateGenerator(HoltEnvironments::PrezenzQ::LedDriver::ledValueGeneratingFunction _function)
+void LedDriver::updateGenerator(LedDriver::ledValueGeneratingFunction _function)
 {
   resetTransitionIndex();
   led_value_generator.previous = led_value_generator.current;
@@ -96,7 +98,7 @@ void HoltEnvironments::PrezenzQ::LedDriver::updateGenerator(HoltEnvironments::Pr
  * 
  * @param _state Initial state that the controller should start with.
  */
-void HoltEnvironments::PrezenzQ::LedDriver::setState(HoltEnvironments::PrezenzQ::LedDriver::State _state) {
+void LedDriver::setState(LedDriver::State _state) {
   switch(_state){
     case State::OFF:
       updateGenerator(&ledLoopOff);
@@ -118,7 +120,7 @@ void HoltEnvironments::PrezenzQ::LedDriver::setState(HoltEnvironments::PrezenzQ:
  * @param _t Interpolation factor, between 0.0 and 1.0.
  * @return unsigned char Value as a result of interpolation.
  */
-unsigned char HoltEnvironments::PrezenzQ::LedDriver::lerp(unsigned char _a, unsigned char _b, float _t)
+unsigned char LedDriver::lerp(unsigned char _a, unsigned char _b, float _t)
 {
   return _a + (_b - _a) * _t;
 }
@@ -129,7 +131,7 @@ unsigned char HoltEnvironments::PrezenzQ::LedDriver::lerp(unsigned char _a, unsi
  * 
  * @param _current_color Pointer to the struct holding the current color to be sent to the led strip.
  */
-void HoltEnvironments::PrezenzQ::LedDriver::setLedColor(LedColor *_current_color)
+void LedDriver::setLedColor(LedColor *_current_color)
 {
   static unsigned long current_millis;
   static float transition_scalar;
@@ -190,7 +192,7 @@ void HoltEnvironments::PrezenzQ::LedDriver::setLedColor(LedColor *_current_color
  * @see ledLoopWaiting()
  * @see ledLoopOn()
  */
-void HoltEnvironments::PrezenzQ::LedDriver::update() {
+void LedDriver::update() {
   static LedColor color;
 
   setLedColor(&color);
@@ -215,7 +217,7 @@ void HoltEnvironments::PrezenzQ::LedDriver::update() {
  * 
  * @param _color 
  */
-void HoltEnvironments::PrezenzQ::LedDriver::ledLoopOff(long _current_millis, HoltEnvironments::PrezenzQ::LedDriver::LedColor *_color){
+void LedDriver::ledLoopOff(long _current_millis, LedDriver::LedColor *_color){
   
   if(_color != NULL){
     _color->r = 0;
@@ -231,7 +233,7 @@ void HoltEnvironments::PrezenzQ::LedDriver::ledLoopOff(long _current_millis, Hol
  * 
  * @param _color 
  */
-void HoltEnvironments::PrezenzQ::LedDriver::ledLoopWaiting(long _current_millis, HoltEnvironments::PrezenzQ::LedDriver::LedColor *_color){
+void LedDriver::ledLoopWaiting(long _current_millis, LedDriver::LedColor *_color){
 
   unsigned long curr_millis = millis();
 
@@ -249,7 +251,7 @@ void HoltEnvironments::PrezenzQ::LedDriver::ledLoopWaiting(long _current_millis,
  * 
  * @param _color 
  */
-void HoltEnvironments::PrezenzQ::LedDriver::ledLoopOn(long _current_millis, HoltEnvironments::PrezenzQ::LedDriver::LedColor *_color){
+void LedDriver::ledLoopOn(long _current_millis, LedDriver::LedColor *_color){
   if(_color != NULL){
     _color->r = 255;
     _color->g = 255;
@@ -279,7 +281,7 @@ void HoltEnvironments::PrezenzQ::LedDriver::ledLoopOn(long _current_millis, Holt
  * @param _offset The offset of the sin wave.
  * @return float Value between 0.0 - 1.0.
  */
-float HoltEnvironments::PrezenzQ::LedDriver::sin_wave(unsigned long _millis, int _period, int _offset)
+float LedDriver::sin_wave(unsigned long _millis, int _period, int _offset)
 {
   float i = _millis % _period;
   float x = ((float) i / _period);
