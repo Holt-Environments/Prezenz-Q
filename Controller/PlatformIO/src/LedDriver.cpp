@@ -196,7 +196,6 @@ void LedDriver::update() {
   static LedColor color;
 
   setLedColor(&color);
-  Serial.println(color.b);
 
   if(LED_R >= 0)
     analogWrite(LED_R, color.r);
@@ -238,10 +237,10 @@ void LedDriver::ledLoopWaiting(long _current_millis, LedDriver::LedColor *_color
   unsigned long curr_millis = millis();
 
   if(_color != NULL){
-    _color->r = (unsigned char)(sin_wave(curr_millis, SIN_PERIOD, 0) * 255);
-    _color->g = (unsigned char)(sin_wave(curr_millis, SIN_PERIOD, 0) * 255);
-    _color->b = (unsigned char)(sin_wave(curr_millis, SIN_PERIOD, 0) * 255);
-    _color->w = (unsigned char)(sin_wave(curr_millis, SIN_PERIOD, 0) * 255);
+    _color->r = (unsigned char)(sin_wave(curr_millis, SIN_PERIOD, 300) * 255);
+    _color->g = (unsigned char)(sin_wave(curr_millis, SIN_PERIOD, 100) * 255);
+    _color->b = (unsigned char)(sin_wave(curr_millis, SIN_PERIOD, 1200) * 255);
+    _color->w = (unsigned char)(sin_wave(curr_millis, SIN_PERIOD, 2000) * 255);
   }
 }
 

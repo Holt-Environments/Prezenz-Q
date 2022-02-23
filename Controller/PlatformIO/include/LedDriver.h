@@ -6,12 +6,12 @@ AUTHOR: Anthony Mesa
 
 #pragma once
 
-#define LED_R -1
-#define LED_G -1
-#define LED_B 13
-#define LED_W -1
+#define LED_R 5
+#define LED_G 6
+#define LED_B 3
+#define LED_W 9
 #define SIN_PERIOD 3000 // ms
-#define TRANSITION_MAX_INDEX 10// ms
+#define TRANSITION_MAX_INDEX 1000// ms
 
 namespace HoltEnvironments {
 
