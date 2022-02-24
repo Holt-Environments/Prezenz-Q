@@ -35,7 +35,6 @@ void setup()
   Serial.begin(ARDUINO_SERIAL_BAUD);
   TofSensor::init(&onDetected, &onNotDetected);
   LedDriver::init();
-  LedDriver::setState(LedDriver::State::WAITING);
 }
 
 void loop()

@@ -284,6 +284,7 @@ float LedDriver::sin_wave(unsigned long _millis, int _period, int _offset)
 {
   float i = _millis % _period;
   float x = ((float) i / _period);
-  float y = (.5 * sin((2 * PI * x) + (2 * PI * _offset))) + .5;
+  float r = ((float) _offset / _period);
+  float y = (.5 * sin((2 * PI * x) + (2 * PI * r))) + .5;
   return y;
 }
