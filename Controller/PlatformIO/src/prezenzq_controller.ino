@@ -22,7 +22,7 @@ using HoltEnvironments::PrezenzQ::LedDriver;
 
 void onDetected() {
   Serial.println("detected!");
-  LedDriver::setState(LedDriver::State::WAITING);
+  LedDriver::setState(LedDriver::State::ON);
 }
 
 void onNotDetected() {
@@ -30,16 +30,45 @@ void onNotDetected() {
   LedDriver::setState(LedDriver::State::OFF);
 }
 
+void testLedTransition() {
+  static unsigned long current;
+  static unsigned long time;
+  static bool state;
+
+  current = millis();
+  time = current % 10000;
+  
+  if((state == true) && (time < 5000)){
+    state = false;
+    LedDriver::setState(LedDriver::State::OFF);
+  }
+
+  if((state == false) && (time >= 5000)){
+    state = true;
+    LedDriver::setState(LedDriver::State::ON);
+  }
+}
+
 void setup()
 {
   Serial.begin(ARDUINO_SERIAL_BAUD);
-  TofSensor::init(&onDetected, &onNotDetected);
+  
+  if(!TofSensor::init(&onDetected, &onNotDetected)){
+    while(true){
+      Serial.println("sensor failed to initialize");
+    }
+  };
+  
   LedDriver::init();
+  LedDriver::setState(LedDriver::State::WAITING);
 }
 
 void loop()
 {
   TofSensor::update();
+
+  // testLedTransition();
+
   LedDriver::update();
 }
 

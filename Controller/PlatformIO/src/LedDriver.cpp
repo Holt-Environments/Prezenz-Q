@@ -32,7 +32,7 @@ int LedDriver::transition_index;
  * @see setState()
  * @return int 
  */
-int LedDriver::init() {
+bool LedDriver::init() {
 
   resetTransitionIndex();
 
@@ -58,7 +58,9 @@ int LedDriver::init() {
 
   setState(State::OFF);
 
-  return 0;
+  Serial.println("Led driver initialized...");
+
+  return true;
 }
 
 /**
@@ -197,6 +199,8 @@ void LedDriver::update() {
 
   setLedColor(&color);
 
+  report(&color);
+
   if(LED_R >= 0)
     analogWrite(LED_R, color.r);
   
@@ -208,6 +212,17 @@ void LedDriver::update() {
   
   if(LED_W >= 0)
     analogWrite(LED_W, color.w);
+}
+
+void LedDriver::report(LedColor *_current_color){
+  Serial.print("r: ");
+  Serial.print(_current_color->r);
+  Serial.print(" g: ");
+  Serial.print(_current_color->g);
+  Serial.print(" b: ");
+  Serial.print(_current_color->b);
+  Serial.print(" w: ");
+  Serial.println(_current_color->w);
 }
 
 /**

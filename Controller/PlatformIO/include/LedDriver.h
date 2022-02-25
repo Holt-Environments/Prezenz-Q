@@ -11,7 +11,7 @@ AUTHOR: Anthony Mesa
 #define LED_B 3
 #define LED_W 9
 #define SIN_PERIOD 3000 // ms
-#define TRANSITION_MAX_INDEX 1000// ms
+#define TRANSITION_MAX_INDEX 50 // NOT MS!!!!
 
 namespace HoltEnvironments {
 
@@ -26,7 +26,7 @@ public:
    */
   enum State { OFF, WAITING, ON };
 
-  static int init();
+  static bool init();
   static void setState(State _state);
   static void update();
 
@@ -65,6 +65,8 @@ private:
 
   static float sin_wave(unsigned long _millis, int _period, int _offset);
   static unsigned char lerp(unsigned char _a, unsigned char _b, float _t);
+
+  static void report(LedColor *_current_color);
 };
 
 } //  PrezenzQ

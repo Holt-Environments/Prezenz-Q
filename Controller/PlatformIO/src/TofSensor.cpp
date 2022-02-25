@@ -27,7 +27,7 @@ TofSensor::callback TofSensor::on_undetected = NULL;
  * @return int Return value is -1 if the sensor fails to initialize,
  * and is 0 otherwise.
  */
-int TofSensor::init(TofSensor::callback _on_detected, TofSensor::callback _on_undetected) {
+bool TofSensor::init(TofSensor::callback _on_detected, TofSensor::callback _on_undetected) {
 
   /* Set the static callbacks to the function addresses provided as arguments.
    */
@@ -52,9 +52,10 @@ int TofSensor::init(TofSensor::callback _on_detected, TofSensor::callback _on_un
     sensor.setDistanceMode(VL53L1X::Short);
     sensor.setMeasurementTimingBudget(SENSOR_TIMING_BUDGET);
     sensor.startContinuous(SENSOR_WAIT);
-    return 0;
+    Serial.println("Sensor initialized...");
+    return true;
   } else {
-    return -1;
+    return false;
   }
 }
 

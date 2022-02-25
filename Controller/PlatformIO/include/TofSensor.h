@@ -27,7 +27,7 @@ public:
 
   typedef void (*volatile callback)();
 
-  static int init(callback _on_detected, callback _on_undetected);
+  static bool init(callback _on_detected, callback _on_undetected);
   static void update();
 
 private:
