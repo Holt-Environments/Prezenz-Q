@@ -53,7 +53,7 @@ bool LedDriver::init() {
 
   if(LED_W >= 0){
     pinMode(LED_W, OUTPUT);
-    digitalWrite(LED_W, OUTPUT);
+    digitalWrite(LED_W, LOW);
   }
 
   setState(State::OFF);
@@ -199,7 +199,7 @@ void LedDriver::update() {
 
   setLedColor(&color);
 
-  report(&color);
+  //report(&color);
 
   if(LED_R >= 0)
     analogWrite(LED_R, color.r);

@@ -1,8 +1,13 @@
-
-/*
-LedDriver.h
-AUTHOR: Anthony Mesa
-*/
+/**
+ * @file LedDriver.h
+ * @author your name (you@domain.com)
+ * @brief 
+ * @version 0.1
+ * @date 2022-02-28
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
 
 #pragma once
 
@@ -11,7 +16,7 @@ AUTHOR: Anthony Mesa
 #define LED_B 3
 #define LED_W 9
 #define SIN_PERIOD 3000 // ms
-#define TRANSITION_MAX_INDEX 50 // NOT MS!!!!
+#define TRANSITION_MAX_INDEX 500 // NOT MS!!!!
 
 namespace HoltEnvironments {
 

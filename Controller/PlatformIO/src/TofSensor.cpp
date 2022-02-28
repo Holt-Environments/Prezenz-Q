@@ -52,9 +52,10 @@ bool TofSensor::init(TofSensor::callback _on_detected, TofSensor::callback _on_u
     sensor.setDistanceMode(VL53L1X::Short);
     sensor.setMeasurementTimingBudget(SENSOR_TIMING_BUDGET);
     sensor.startContinuous(SENSOR_WAIT);
-    Serial.println("Sensor initialized...");
+    Serial.println("TOF Sensor initialized...");
     return true;
   } else {
+    Serial.println("TOF sensor failed to initialize!");
     return false;
   }
 }
