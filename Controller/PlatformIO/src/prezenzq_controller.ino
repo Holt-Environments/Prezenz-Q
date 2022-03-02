@@ -14,12 +14,14 @@ using HoltEnvironments::PrezenzQ::HC05Driver;
 
 void onDetected() {
   Serial.println("detected!");
-  LedDriver::setState(LedDriver::State::ON);
+  byte cmd[4] = { '[', 0x41, 0x01, ']' };
+  HC05Driver::sendByteData(cmd, 4);
 }
 
 void onNotDetected() {
   Serial.println("not detected!");
-  LedDriver::setState(LedDriver::State::OFF);
+  byte cmd[4] = { '[', 0x41, 0x00, ']' };
+  HC05Driver::sendByteData(cmd, 4);
 }
 
 void testLedTransition() {

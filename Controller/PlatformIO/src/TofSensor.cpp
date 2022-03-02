@@ -29,6 +29,8 @@ TofSensor::callback TofSensor::on_undetected = NULL;
  */
 bool TofSensor::init(TofSensor::callback _on_detected, TofSensor::callback _on_undetected) {
 
+  delay(1000);
+  
   /* Set the static callbacks to the function addresses provided as arguments.
    */
   on_detected = _on_detected;

@@ -39,6 +39,7 @@ public:
   static bool init();
   static void update();
   static void debugUpdate();
+  static void sendByteData(byte cmd[4], int len);
 
 private:
 
@@ -46,7 +47,7 @@ private:
 
   static void evaluateCharacter(unsigned char _byte_read);
   static void handleCommand(unsigned char _response[]);
-
+  static void emptyBuffer();
 };
 
 } //  HoltEnvironments
