@@ -1,16 +1,14 @@
 
-// #include "PrezenzQController.h"
 #include "LedDriver.h"
 #include "TofSensor.h"
 #include "HC05Driver.h"
 
 #define ARDUINO_SERIAL_BAUD 9600
+#define ARDUINO_LED 13
 
 using HoltEnvironments::PrezenzQ::TofSensor;
 using HoltEnvironments::PrezenzQ::LedDriver;
 using HoltEnvironments::PrezenzQ::HC05Driver;
-
-// SoftwareSerial HC05(BT_RX, BT_TX);
 
 void onDetected() {
   Serial.println("detected!");
@@ -46,14 +44,27 @@ void testLedTransition() {
 void setup()
 {
   Serial.begin(ARDUINO_SERIAL_BAUD);
-  
+  pinMode(ARDUINO_LED, OUTPUT);
+
   if(!TofSensor::init(&onDetected, &onNotDetected)){
     while(true){
+      digitalWrite(ARDUINO_LED, HIGH);
+      delay(100);
+      digitalWrite(ARDUINO_LED, LOW);
+      delay(100);
+      digitalWrite(ARDUINO_LED, HIGH);
+      delay(100);
+      digitalWrite(ARDUINO_LED, LOW);
+      delay(100);
+      digitalWrite(ARDUINO_LED, HIGH);
+      delay(100);
+      digitalWrite(ARDUINO_LED, LOW);
+      delay(1000);
     }
   };
   
   LedDriver::init();
-  LedDriver::setState(LedDriver::State::OFF);
+  LedDriver::setState(LedDriver::State::WAITING);
 
   if(!HC05Driver::init())
   {

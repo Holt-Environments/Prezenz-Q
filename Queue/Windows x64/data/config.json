@@ -8,7 +8,11 @@
   "background": "bg.mp4",
 	"sensors": {
 		"A": {
-			"port": "COM6",
+			"port": "COM5",
+			"video": "cat.mp4"
+		},
+		"B": {
+			"port": "COM7",
 			"video": "cat.mp4"
 		}
 	}

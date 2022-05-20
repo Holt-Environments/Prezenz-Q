@@ -7,7 +7,7 @@ AUTHOR: Anthony Mesa
 #include "TofSensor.h"
 #include <Wire.h>
 
-/* Set using for visual clarity in code.
+/* Set 'using' for visual clarity in code.
  */
 using HoltEnvironments::PrezenzQ::TofSensor;
 
@@ -29,8 +29,9 @@ TofSensor::callback TofSensor::on_undetected = NULL;
  */
 bool TofSensor::init(TofSensor::callback _on_detected, TofSensor::callback _on_undetected) {
 
-  delay(1000);
-  
+  pinMode(SENSOR_XSHUT, OUTPUT);
+  digitalWrite(SENSOR_XSHUT, HIGH);
+
   /* Set the static callbacks to the function addresses provided as arguments.
    */
   on_detected = _on_detected;
@@ -44,6 +45,8 @@ bool TofSensor::init(TofSensor::callback _on_detected, TofSensor::callback _on_u
   sensor.setTimeout(SENSOR_TIMEOUT);
 
   bool sensor_is_initialized = sensor.init();
+
+  digitalWrite(SENSOR_XSHUT, LOW);
 
   if (sensor_is_initialized)
   {

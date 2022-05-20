@@ -29,9 +29,10 @@ class ofApp : public ofBaseApp
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+		static void wait(int i);
 };
 
-class InteractiveDevice
+class InteractiveDevice 
 {
 public:
 	int buffer_state;
@@ -40,12 +41,15 @@ public:
 	ofVideoPlayer video;
 	bool device_state;
 	std::string port;
+	int baud;
+	bool is_restarting;
 
 	void setup(const char* _port, int _baud, const char* _video_path) 
 	{
 		buffer_state = false;
 		std::string temp_port = _port;
 		port = SERIAL_PREFIX + temp_port;
+		baud = _baud;
 
 		if (serial.setup(port, _baud) == 0)
 		{
@@ -60,8 +64,36 @@ public:
 		device_state = false;
 	}
 
+	static void restartSerial(ofSerial _serial, std::string _port, int _baud)
+	{
+		if (_serial.isInitialized())
+		{
+			_serial.close();
+		}
+
+		_serial = ofSerial::ofSerial();
+
+		/**
+		* Yes it is odd that I am calling setup() here twice, but
+		* for some reason it doesn't work when calling the function once,
+		* it will just disconnect without trying to reconnect.
+		*
+		* restartSerial() in the InteractiveDevice class just calls close()
+		* and setup() on the device object's serial member. Not much documentation
+		* on ofSerial, so I don't know why it isn't closing and setting up with
+		* a single call.
+		*/
+		ofApp::wait(1);
+		std::cout << "Setup " << (_serial.setup(_port, _baud) ? "passed!" : "failed.") << std::endl;
+	}
+
 	void getStateFromSerial()
 	{
+		if (this->is_restarting)
+		{
+			return;
+		}
+
 		if (this->serial.available() <= 0)
 		{
 			return;

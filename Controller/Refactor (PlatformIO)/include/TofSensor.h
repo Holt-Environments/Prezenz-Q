@@ -8,7 +8,7 @@ AUTHOR: Anthony Mesa
 
 #include <VL53L1X.h>
 
-#define SENSOR_XSHUT 6
+#define SENSOR_XSHUT 4
 #define SENSOR_I2C_CLOCK 400000
 #define SENSOR_TIMEOUT 0 // ms
 #define SENSOR_TIMING_BUDGET_MS 200 // ms

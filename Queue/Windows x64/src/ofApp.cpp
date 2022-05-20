@@ -3,6 +3,8 @@
 #include <cmath>
 #include <cassert>
 #include <ofJson.h>
+#include <thread>
+#include <vector>
 
 ofVideoPlayer background;
 ofVideoPlayer* overlay;
@@ -309,6 +311,7 @@ void updateBackground()
 
 //--------------------------------------------------------------
 void ofApp::update(){
+
 	background.update();
 
 	updateDevices();
@@ -350,10 +353,55 @@ void ofApp::draw(){
 	}
 }
 
+void serial_restart()
+{
+	std::cout << "restarting serial devices:" << std::endl;
+
+	std::vector<std::thread> extra_special_threadlist;
+
+	for (auto i : device_list)
+	{
+		std::cout << "restarting " << i->port << "..." << std::endl;
+
+		if (!i->is_restarting) {
+
+			i->is_restarting = true;
+
+			std::thread new_thread(InteractiveDevice::restartSerial, i->serial, i->port, i->baud);
+			extra_special_threadlist.push_back(new_thread);
+
+			std::cout << "begin restart..." << std::endl;
+		}
+	}
+
+	std::cout << "Moving on!" << std::endl;
+
+	for (std::thread & f : extra_special_threadlist)
+	{
+		if (f.joinable()) 
+		{
+			std::cout << "waiting for thread..." << std::endl;
+			f.join();
+		}
+	}
+
+	std::cout << "next..." << std::endl;
+}
+
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	if (key == 27) {
+
+	if (key == 27)
+	{
 		exit();
+	}
+
+	else if (key == 114)
+	{	
+		std::cout << "R pressed" << std::endl;
+
+		std::thread first(serial_restart);
+		first.join();
 	}
 }
 
@@ -415,8 +463,24 @@ void ofApp::exit()
 	}
 
 	if (fatal_error == true)
-	{
-		std::cout << "\nPress enter to exit..." << std::endl;
-		std::cin.ignore();
+	{	
+		std::cout << std::endl;
+		std::cout << "This window will close in 10 seconds..." << std::endl;
+
+		wait(10);
 	}
+}
+
+void ofApp::wait(int i)
+{
+	bool timeout_reached = false;
+
+	float start = ofGetElapsedTimef();
+	do {
+		float now = ofGetElapsedTimef();
+
+		if (now > start + i) {
+			timeout_reached = true;
+		}
+	} while (!timeout_reached);
 }
