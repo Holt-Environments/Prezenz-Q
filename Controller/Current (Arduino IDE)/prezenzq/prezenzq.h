@@ -1,0 +1,3 @@
+
+#define ARDUINO_LED 13
+#define ARDUINO_SERIAL_BAUD 9600
