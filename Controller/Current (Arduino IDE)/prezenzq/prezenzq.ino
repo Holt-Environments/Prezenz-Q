@@ -1,14 +1,10 @@
 //================================================
-//  Libraries
+//  Definitions
 //================================================
 #include <SoftwareSerial.h>
 #include <Wire.h>
 #include <VL53L1X.h>
-#include <VariableTimedAction.h>
-
-//================================================
-//  Definitions
-//================================================
+#include <Button.h>
 
 //  Any digital pins should be able to be used for this. The number is the
 //  digital pin on the Arduino corresponding to the Arduino's digital RX and TX.
@@ -58,8 +54,8 @@
 #define ARDUINO_LED 13
 #define ARDUINO_SERIAL_BAUD 9600
 
-// This defines the pin for the manual button that can be used whether or not sensor is connected.
 #define SINGLE_STATE_BUTTON 5
+#define SINGLE_STATE_BUTTON_LED 6
 
 //================================================
 //  Global Variables
@@ -73,10 +69,14 @@ SoftwareSerial HC05(BT_RX, BT_TX);
 //  Object for working with TOF sensor
 VL53L1X sensor;
 
-//  Function pointer for handling incoming LED commands
-void (*volatile ledCommand)();
+//Arduino
+//================================================
+void (*volatile ledCommand)() = NULL;
 void (*volatile executeCode)() = NULL;
+
 bool sensor_initialized;
+
+Button button1(SINGLE_STATE_BUTTON, 3000);
 
 //================================================
 //  Functions
@@ -84,44 +84,29 @@ bool sensor_initialized;
 
 void sensorInitFailed()
 {
-  static int previous_switch_value;
-  static int current_switch_value;
   static int switch_state;
-
-  static long current_debounce_time;
-  static long last_debounce_time; // the last time the output pin was toggled
-  static long debounce_delay;    // the debounce time; increase if the output flickers
-
-  debounce_delay = 200; // .2 sec
-
-  current_switch_value = digitalRead(SINGLE_STATE_BUTTON);
-
-  if((previous_switch_value == LOW) && (current_switch_value == HIGH)){
-    current_debounce_time = millis();
-    if((current_debounce_time - last_debounce_time) > debounce_delay) {
-      switch_state++;
   
-      if(switch_state == 1){
-        byte cmd[4] = { '[', SENSOR_ID, 0x01, ']' };
-        HC05.write(cmd, 4);
-      }
-  
-      if(switch_state == 2){
-        byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
-        HC05.write(cmd, 4);  
-        switch_state = 0;  
-      }
-
-      Serial.println(current_debounce_time);
-
-      previous_switch_value = current_switch_value;
-      last_debounce_time = current_debounce_time; //set the current time
+  if(button1.checkPress() == -1){
+    if(initSensor()){
+      ledCommand = &ledOff;
+      executeCode = &defaultMode;
+      digitalWrite(ARDUINO_LED, LOW);
+      digitalWrite(SINGLE_STATE_BUTTON_LED, LOW);
+    } else {
+      Serial.println("init sensor failed");
     }
-  } else if((previous_switch_value == HIGH) && (current_switch_value == LOW)){
-    current_debounce_time = millis();
-    if((current_debounce_time - last_debounce_time) > debounce_delay) {
-      previous_switch_value = current_switch_value;
-      last_debounce_time = current_debounce_time; //set the current time
+  }
+  
+  if(button1.checkPress() == 1){
+    switch_state++;
+
+    if(switch_state == 1){
+      byte cmd[4] = { '[', SENSOR_ID, 0x01, ']' };
+      HC05.write(cmd, 4);
+    } else if(switch_state == 2){
+      byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
+      HC05.write(cmd, 4);
+      switch_state = 0;
     }
   }
 }
@@ -238,6 +223,14 @@ void handleSensor()
   static int sensor_value;
 
   process_waiting_commands();
+
+  if(button1.checkPress() == -1){
+      ledCommand = &ledOff;
+      executeCode = &sensorInitFailed;
+      digitalWrite(ARDUINO_LED, HIGH);
+      digitalWrite(SINGLE_STATE_BUTTON_LED, HIGH);
+      return;
+  }
   
   if(sensor.dataReady()){
     sensor_value = sensor.read(false);
@@ -298,8 +291,7 @@ void handleSensor()
 
 String error;
 
-//Arduino
-//================================================
+
 
 void setup() 
 {
@@ -307,6 +299,7 @@ void setup()
   pinMode(LED_B, OUTPUT);
   pinMode(BT_DEBUG_ENABLED, INPUT);
   pinMode(SINGLE_STATE_BUTTON, INPUT);
+  pinMode(SINGLE_STATE_BUTTON_LED, OUTPUT);
 
   digitalWrite(ARDUINO_LED, LOW);
   Serial.begin(ARDUINO_SERIAL_BAUD);
@@ -325,6 +318,7 @@ void setup()
     error = "sensor not initialized\n";
     ledCommand = &ledOff;
     digitalWrite(ARDUINO_LED, HIGH);
+    digitalWrite(SINGLE_STATE_BUTTON_LED, HIGH);
     HC05.begin(BT_BAUD);
     executeCode = &sensorInitFailed;
   } else {    //The device is working properly in normal mode.
