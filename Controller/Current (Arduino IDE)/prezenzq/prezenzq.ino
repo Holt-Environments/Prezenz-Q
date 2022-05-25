@@ -1,336 +1,282 @@
-//================================================
-//  Definitions
-//================================================
-#include <SoftwareSerial.h>
-#include <Wire.h>
-#include <VL53L1X.h>
-#include <Button.h>
 
-//  Any digital pins should be able to be used for this. The number is the
-//  digital pin on the Arduino corresponding to the Arduino's digital RX and TX.
-#define BT_RX 8 // WORKS LIKE THIS DONT CHANGE
-#define BT_TX 7
-#define BT_BAUD 9600
-#define BT_DEBUG_ENABLED A0
+/**
+   =======================================================================
+   PrezenzQ Controller
 
-//  XSHUT isnt necessary and isn't used in this code but 
-//  here it is defined for possible future use. XSHUT becomes
-//  important if ever we need to change the I2C address of the
-//  sensor before it boots up.
-#define SENSOR_XSHUT 6
-#define SENSOR_I2C_CLOCK 400000
+   Holt Environments
+   Author: Anthony Mesa
+   Date: 05/24/2022
 
-//  Maximum response time for sensor before sensor returns an error
-#define SENSOR_TIMEOUT 0 // ms
+   The PrezenzQ controller is meant to be paired with the PrezenzQ video
+   queuing desktop application available at:
 
-//  Sensor_timing_budget_ms controlls how long the sensor is actively reading.
-//  Sensor_wait_ms is the amount of ms that the sensor will NOT read between successive
-//  intervals.
-#define SENSOR_TIMING_BUDGET_MS 200 // ms
-#define SENSOR_WAIT_MS 200 // ms
-#define SENSOR_TIMING_BUDGET ((long)SENSOR_TIMING_BUDGET_MS * 1000) // 50,000 us = 50 ms
-#define SENSOR_WAIT (SENSOR_TIMING_BUDGET_MS + SENSOR_WAIT_MS)
+    https://github.com/Holt-Environments/Prezenz-Q/tree/master/Queue/Windows%20x64
 
-//  The trigger distance does not have a "real world equivalent" yet. This is a unit-less number.
-#define SENSOR_TRIGGER_DISTANCE 350
-#define DEFAULT_MAX_DISTANCE 1000
+   This controller uses an Arduino Nano and utilizes Bluetooth connection via
+   an HC05 bluetooth module, time of flight sensing via a VL53L1X TOF sensor,
+   and an external LED strip (at the time of writing this, the controller is only
+   designed to manipulate a single channel of RGB color, in this specific case,
+   the color blue is what we want to control).
 
-//  Sensor should be unique for each device. values are 0-255 char values, where alphabet chars
-//  are highly reccomended.
-#define SENSOR_ID 'D'
-#define SENSOR_ERROR_INIT_FAILED 0x30 // '0' Error value for when sensor initialization has timed out.
-#define SENSOR_ERROR_TIMEOUT 0x31 // '1' Error value for when sensor reading has timed out.
-#define SENSOR_DETECTION_BUFFER_MAX 75
+   The controller draws 24V power at a maximum of around 8-10 amps. The schematics
+   for the controller and information on the hardware is available here:
 
-//  When not using a specific led color channel (When that led color channel is not wired/connected to 
-//  a corresponding Arduino digital pin) its definition should be set to (-1).
-#define LED_R -1;
-#define LED_G -1
-#define LED_B 3
-#define LED_W -1
-#define LED_PERIOD 3000 // ms
+   https://github.com/Holt-Environments/Prezenz-Q/tree/master/Controller/Schematics
 
-//  Arduino specific
-#define ARDUINO_LED 13
-#define ARDUINO_SERIAL_BAUD 9600
+   If you are reading this, live in NC, and build things with computers, you
+   should contact us about career opprotunities:
 
-#define SINGLE_STATE_BUTTON 5
-#define SINGLE_STATE_BUTTON_LED 6
+   https://www.holtenvironments.com/contact/
 
-//================================================
-//  Global Variables
-//================================================
+   =======================================================================
+*/
 
-//  Software serial for bluetooth device so that
-//  we can still use the normal serial port for
-//  USB communication when plugged in.
-SoftwareSerial HC05(BT_RX, BT_TX);
+#include "prezenzq.h"
+#include "led_strip.h"
+#include "bt_conn.h"
+#include "tof_sensor.h"
+#include "button.h"
 
-//  Object for working with TOF sensor
-VL53L1X sensor;
+/**
+   This function pointer is used by being called in the Arduino's loop function.
+   There are three main states for this controller to be in, DEBUG, MANUAL, and SENSOR.
+   The functionality for those states are defined in their own functions below, and
+   when the controller has to switch from one state to the other, one can simply
+   change to which of those state functions that this function pointer is pointing.
+*/
+void (*execute_control_state)() = NULL;
 
-//Arduino
-//================================================
-void (*volatile ledCommand)() = NULL;
-void (*volatile executeCode)() = NULL;
+/**
+   The DEBUG control state is largely for messing with the HC05's
+   AT commands. This just makes it so that the led strip still updates
+   (in debug mode it should be slowly flashing continuously), and any
+   data sent to the controller via USB serial is sent directly to the
+   HC05 module and vis-versa.
+*/
+void debug_control_state()
+{
+  led_strip_update();
 
-bool sensor_initialized;
+  if (bt_conn_available())
+    Serial.write(bt_conn_read());
+  if (Serial.available())
+    bt_conn_send(Serial.read());
+}
 
-Button button1(SINGLE_STATE_BUTTON, 3000);
+/**
+   In the MANUAL control state, the controller can only be updated via
+   button press. A single press of the button switches the state from
+   on to off and vis-versa.
 
-//================================================
-//  Functions
-//================================================
-
-void sensorInitFailed()
+   To switch back to the SENSOR control state, the button must be held
+   down for the seconds duration defined in the button.h header.
+*/
+void manual_control_state()
 {
   static int switch_state;
-  
-  if(button1.checkPress() == -1){
-    if(initSensor()){
-      ledCommand = &ledOff;
-      executeCode = &defaultMode;
+  static enum button_state current_button_state;
+
+  // Get any updates from the videoq on PC
+  handle_video_q_update();
+
+  led_strip_update();
+
+  // Read the current button state
+  current_button_state = button_get_state();
+
+  /**
+     If the button is held, then try to initialize the sensor
+     before switching to SENSOR control mode. If the sensor can not
+     be initialized, then the controller stays in the MANUAL control
+     state.
+
+     If the button is only clicked, then control the videoq accordingly.
+  */
+  if (current_button_state == BUTTON_HELD) {
+    if (tof_sensor_init()) {
+      Serial.println("Switching from MANUAL to SENSOR state...");
+      led_strip_set_command(LED_STRIP_OFF);
+      execute_control_state = &sensor_control_state;
+      button_led_set(0);
       digitalWrite(ARDUINO_LED, LOW);
-      digitalWrite(SINGLE_STATE_BUTTON_LED, LOW);
     } else {
       Serial.println("init sensor failed");
     }
-  }
-  
-  if(button1.checkPress() == 1){
+  } else if (current_button_state == BUTTON_PRESSED) {
+
+    /**
+       There are three switched states (these states are independent of the
+       button states defined in button.h). The switch is initialized at state 0,
+       indicating that the button hasn't been pressed yet. Upon a button click,
+       the state will increment to 1, indicating that a video should be queued.
+       Another button click will advance the switch state to 2, meaning that
+       the video currently queued should be dequeued, and the switch state is then
+       reset to 0, so that upon next button click it is advanced to 1 again.
+    */
+
     switch_state++;
 
-    if(switch_state == 1){
-      byte cmd[4] = { '[', SENSOR_ID, 0x01, ']' };
-      HC05.write(cmd, 4);
-    } else if(switch_state == 2){
-      byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
-      HC05.write(cmd, 4);
-      switch_state = 0;
+    /**
+       This is initialized as the 'dequeue command' given the 0x00 payload. A
+       payload of 0x01 will indicate the 'queue video' command.
+    */
+    byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
+
+    if (switch_state == 1) {
+      cmd[2] = 0x01; // update the payload to the 'queue' command.
+    } else if (switch_state == 2) {
+      switch_state = 0; // keep the initial 0x00 payload and reset the switch state.
     }
+
+    bt_conn_send(cmd, 4);
   }
 }
 
- //If there is an issue with the sensor initialization,
- //then the Arduino will loop continuously in an error
- //state
-bool initSensor()
-{
-  Wire.begin();
-  Wire.setClock(SENSOR_I2C_CLOCK);
-  
-  sensor.setTimeout(SENSOR_TIMEOUT);
+/**
+   Get the most recent commands sent to the controller via the
+   prezenzq video player running on the connected PC.
 
-  sensor_initialized = sensor.init();
+   Currently this only serves to manipulate the LED strip based
+   on three different ascii values recieved, F, W, and N.
+*/
+void handle_video_q_update() {
+  static char command;
 
-  sensor.setROISize(4, 4);
-  
-  if (sensor_initialized)
-  {
-    sensor.setDistanceMode(VL53L1X::Short);
-    sensor.setMeasurementTimingBudget(SENSOR_TIMING_BUDGET);
-    sensor.startContinuous(SENSOR_WAIT);
-    return true;
-  } else {
-    return false;
-  }
-}
+  command = bt_conn_get_command();
 
-bool object_detected_in_range(int _sensor_value)
-{
-  return _sensor_value < SENSOR_TRIGGER_DISTANCE;
-}
-
-void ledOff()
-{
-  digitalWrite(ARDUINO_LED, LOW);
-  analogWrite(LED_B, 0);
-}
-
-void ledOn()
-{
-  digitalWrite(ARDUINO_LED, HIGH);
-  analogWrite(LED_B, 255);
-}
-
-void ledWaiting()
-{
-  double value = millis() % LED_PERIOD;
-  double test = (.5 * sin(2 * PI * (value / LED_PERIOD))) + .5;
-
-  if(test > .5)
-    digitalWrite(ARDUINO_LED, HIGH);
-  if(test <= .5)
-    digitalWrite(ARDUINO_LED, LOW);
-    
-  analogWrite(LED_B, (int)(test * 255));
-}
-
-void control_led()
-{
-  (*ledCommand)();
-}
-
-void handleCommand(char* command)
-{
-  switch(*command)
+  switch (command)
   {
     case 'F':
-      ledCommand = &ledOff;
+      led_strip_set_command(LED_STRIP_OFF);
       break;
     case 'W':
-      ledCommand = &ledWaiting;
+      led_strip_set_command(LED_STRIP_WAITING);
       break;
     case 'N':
-      ledCommand = &ledOn;
+      led_strip_set_command(LED_STRIP_ON);
       break;
   }
 }
 
-void process_waiting_commands()
+/**
+   In the SENSOR control state, the controller is updated via the Time-Of-Flight
+   sensor. When an object is placed within or removed from a specified zone
+   within the sensor's view, then the videoq is controlled accordingly.
+
+   To switch back to MANUAL control, the button must be held down for the
+   seconds duration defined in the button.h header.
+*/
+void sensor_control_state()
 {
-  static char receipt;
-  if(HC05.available())
-  {
-    receipt = HC05.read();
-    handleCommand(&receipt);
-  }
-}
+  static enum button_state current_button_state;
+  static int previous_sensor_status;
 
-void defaultMode()
-{
-  handleSensor();
-  control_led();
-}
+  // Get any updates from the videoq on PC
+  handle_video_q_update();
 
-void debugMode()
-{
-  handleSensor();
-  control_led();
+  led_strip_update();
 
-  if (HC05.available())
-    Serial.write(HC05.read());
-  if (Serial.available())
-    HC05.write(Serial.read());
-}
+  // Read the current button state
+  current_button_state = button_get_state();
 
-void handleSensor()
-{
-  static char receipt;
-  static bool detection_state;
-  static int detection_buffer;
-  static bool trigger_state;
-  static int sensor_value;
-
-  process_waiting_commands();
-
-  if(button1.checkPress() == -1){
-      ledCommand = &ledOff;
-      executeCode = &sensorInitFailed;
-      digitalWrite(ARDUINO_LED, HIGH);
-      digitalWrite(SINGLE_STATE_BUTTON_LED, HIGH);
-      return;
-  }
-  
-  if(sensor.dataReady()){
-    sensor_value = sensor.read(false);
-  }
-
-  if(sensor.timeoutOccurred())
-  { 
-    Serial.println("timeout");
-    HC05.write(SENSOR_ERROR_TIMEOUT);
+  // If the button is held, then switch to MANUAL control mode.
+  if (current_button_state == BUTTON_HELD) {
+    Serial.println("Switching from SENSOR to MANUAL state...");
+    led_strip_set_command(LED_STRIP_OFF);
+    execute_control_state = &manual_control_state;
+    button_led_set(1);
+    digitalWrite(ARDUINO_LED, HIGH);
     return;
   }
 
-  int signal_status_id = sensor.ranging_data.range_status;
-  String signal_status = VL53L1X::rangeStatusToString(sensor.ranging_data.range_status);
-  
-  bool is_error;
+  // See tof_sensor.cpp for status values.
+  int sensor_status = tof_sensor_update();
 
-  Serial.println(signal_status);
+  /**
+     This is initialized as the 'dequeue command' given the 0x00 payload. A
+     payload of 0x01 will indicate the 'queue video' command.
+  */
+  byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
 
-  if(signal_status.equals("signal fail"))
-  {
-    detection_buffer = 0;
-
-    if((trigger_state == true)){
-      Serial.println("not detected");
-      trigger_state = false;
-      byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
-      HC05.write(cmd, 4);
+  /**
+     This check ensures we only respond when the success state of of the
+     sensor has changed, since this function runs continuously in loop.
+  */
+  if (sensor_status != previous_sensor_status) {
+    switch (sensor_status) {
+      case -1:
+        bt_conn_send(SENSOR_ERROR_TIMEOUT);
+        break;
+      case 0:
+        cmd[2] = 0x01; // update the payload to the 'queue' command.
+        bt_conn_send(cmd, 4);
+        break;
+      case 1:
+        bt_conn_send(cmd, 4); // keep the initial 0x00 payload
+        break;
     }
-  } else if (signal_status_id == 0){
-    Serial.println(sensor_value);
-
-    detection_state = object_detected_in_range(sensor_value);
-  
-    if(detection_state)
-      detection_buffer++;
-    else if(!detection_state)
-      detection_buffer = 0;
-  
-    if((trigger_state == false) && (detection_buffer > SENSOR_DETECTION_BUFFER_MAX))
-    {
-      Serial.println("detected");
-      trigger_state = true;
-      byte cmd[4] = { '[', SENSOR_ID, 0x01, ']' };
-      HC05.write(cmd, 4);
-    } 
-    else if ((trigger_state == true) && (detection_buffer == 0))
-    {
-      Serial.println("not detected");
-      trigger_state = false;
-      byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
-      HC05.write(cmd, 4);
-    }
+    
+    previous_sensor_status = sensor_status;
   }
-  
-  return;
 }
 
-String error;
 
+/**
+   This is the first code to run on the controller. First the bluetooth connection
+   is initialized. If this initialization returns a number greater than 0, then
+   the device should enter the DEBUG state.
 
+   If the device is to enter normal mode, then the TOF sensor is initialized. If
+   an issue occurs with the sensor's initialization, then the device enters the
+   MANUAL control state.
 
-void setup() 
+   If the TOF sensor starts up properly, then the device enters the BLUETOOTH
+   control state.
+*/
+void setup()
 {
   pinMode(ARDUINO_LED, OUTPUT);
-  pinMode(LED_B, OUTPUT);
-  pinMode(BT_DEBUG_ENABLED, INPUT);
-  pinMode(SINGLE_STATE_BUTTON, INPUT);
-  pinMode(SINGLE_STATE_BUTTON_LED, OUTPUT);
-
   digitalWrite(ARDUINO_LED, LOW);
   Serial.begin(ARDUINO_SERIAL_BAUD);
+  
+  led_strip_init();
+  button_init();
+  
+  if (bt_conn_init() > 0) {
 
-   //The sensor is working, so next check that the 
-   //device has been switch to development mode.
+    // Enter DEBUG state
 
-  if(digitalRead(BT_DEBUG_ENABLED) == HIGH)
-  {
-    error = "bt debug enabled\n";
-    ledCommand = &ledWaiting;
-    HC05.begin(38400);
-    executeCode = &debugMode;
-  } else if(!initSensor())   //Initialize the sensor and see if it is working.
-  {
-    error = "sensor not initialized\n";
-    ledCommand = &ledOff;
-    digitalWrite(ARDUINO_LED, HIGH);
-    digitalWrite(SINGLE_STATE_BUTTON_LED, HIGH);
-    HC05.begin(BT_BAUD);
-    executeCode = &sensorInitFailed;
-  } else {    //The device is working properly in normal mode.
-    error = "everything fine\n";
-    ledCommand = &ledOff;
-    HC05.begin(BT_BAUD);
-    executeCode = &defaultMode;
+    led_strip_set_command(LED_STRIP_WAITING);
+    execute_control_state = &debug_control_state;
   }
+  else if (!tof_sensor_init())
+  {
+    // Enter MANUAL state
+    Serial.println("Switching to MANUAL state...");
+    digitalWrite(ARDUINO_LED, HIGH);
+    led_strip_set_command(LED_STRIP_OFF);
+    button_led_set(1);
+    execute_control_state = &manual_control_state;
+  } else {
+
+    // Enter SENSOR state
+
+    led_strip_set_command(LED_STRIP_OFF);
+    execute_control_state = &sensor_control_state;
+  }
+
+  bt_conn_start();
+
 }
 
+/**
+   After setup, this loop runs indefinitely. All this does is execute whichever
+   function that the execute_control_state function pointer is pointing at.
+*/
 void loop()
 {
-  if(executeCode != NULL)
-    (*executeCode)();
+  if (execute_control_state != NULL)
+    (*execute_control_state)();
+
+  delay(1);
 }
