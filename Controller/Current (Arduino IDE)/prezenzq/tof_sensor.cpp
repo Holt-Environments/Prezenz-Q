@@ -1,4 +1,15 @@
 
+/**
+   =======================================================================
+   PrezenzQ Controller - tof_sensor.cpp
+
+   Holt Environments
+   Author: Anthony Mesa
+   Date: 05/24/2022
+
+   =======================================================================
+*/
+
 #include "tof_sensor.h"
 
 //  Object for working with TOF sensor
@@ -42,7 +53,8 @@ int tof_sensor_update()
   static int detection_buffer;
   static bool trigger_state;
   static int sensor_value;
-  
+  static int previous_signal_status_id;
+
   if (sensor.dataReady()) {
     sensor_value = sensor.read(false);
   }
@@ -57,7 +69,12 @@ int tof_sensor_update()
 
   bool is_error;
 
-  Serial.println(signal_status);
+  if (signal_status_id != previous_signal_status_id) {
+    Serial.print(signal_status);
+    Serial.print("- sensor value: ");
+    Serial.println(sensor_value);
+    previous_signal_status_id = signal_status_id;
+  }
 
   if (signal_status.equals("signal fail"))
   {
@@ -67,8 +84,6 @@ int tof_sensor_update()
       return 1;
     }
   } else if (signal_status_id == 0) {
-    Serial.println(sensor_value);
-
     detection_state = object_detected_in_range(sensor_value);
 
     if (detection_state)

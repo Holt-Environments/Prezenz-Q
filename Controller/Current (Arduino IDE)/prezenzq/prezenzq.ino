@@ -44,7 +44,7 @@
    when the controller has to switch from one state to the other, one can simply
    change to which of those state functions that this function pointer is pointing.
 */
-void (*volatile execute_control_state)() = NULL;
+void (*execute_control_state)() = NULL;
 
 /**
    The DEBUG control state is largely for messing with the HC05's
@@ -94,6 +94,7 @@ void manual_control_state()
   */
   if (current_button_state == BUTTON_HELD) {
     if (tof_sensor_init()) {
+      Serial.println("Switching from MANUAL to SENSOR state...");
       led_strip_set_command(LED_STRIP_OFF);
       execute_control_state = &sensor_control_state;
       button_led_set(0);
@@ -101,7 +102,7 @@ void manual_control_state()
     } else {
       Serial.println("init sensor failed");
     }
-  } else if (current_button_state == BUTTON_CLICKED) {
+  } else if (current_button_state == BUTTON_PRESSED) {
 
     /**
        There are three switched states (these states are independent of the
@@ -168,6 +169,7 @@ void handle_video_q_update() {
 void sensor_control_state()
 {
   static enum button_state current_button_state;
+  static int previous_sensor_status;
 
   // Get any updates from the videoq on PC
   handle_video_q_update();
@@ -177,8 +179,9 @@ void sensor_control_state()
   // Read the current button state
   current_button_state = button_get_state();
 
-  //If the button is held, then switch to MANUAL control mode.
+  // If the button is held, then switch to MANUAL control mode.
   if (current_button_state == BUTTON_HELD) {
+    Serial.println("Switching from SENSOR to MANUAL state...");
     led_strip_set_command(LED_STRIP_OFF);
     execute_control_state = &manual_control_state;
     button_led_set(1);
@@ -186,6 +189,7 @@ void sensor_control_state()
     return;
   }
 
+  // See tof_sensor.cpp for status values.
   int sensor_status = tof_sensor_update();
 
   /**
@@ -194,17 +198,25 @@ void sensor_control_state()
   */
   byte cmd[4] = { '[', SENSOR_ID, 0x00, ']' };
 
-  switch (sensor_status) {
-    case -1:
-      bt_conn_send(SENSOR_ERROR_TIMEOUT);
-      break;
-    case 0:
-      cmd[2] = 0x01; // update the payload to the 'queue' command.
-      bt_conn_send(cmd, 4);
-      break;
-    case 1:
-      bt_conn_send(cmd, 4); // keep the initial 0x00 payload
-      break;
+  /**
+     This check ensures we only respond when the success state of of the
+     sensor has changed, since this function runs continuously in loop.
+  */
+  if (sensor_status != previous_sensor_status) {
+    switch (sensor_status) {
+      case -1:
+        bt_conn_send(SENSOR_ERROR_TIMEOUT);
+        break;
+      case 0:
+        cmd[2] = 0x01; // update the payload to the 'queue' command.
+        bt_conn_send(cmd, 4);
+        break;
+      case 1:
+        bt_conn_send(cmd, 4); // keep the initial 0x00 payload
+        break;
+    }
+    
+    previous_sensor_status = sensor_status;
   }
 }
 
@@ -226,7 +238,10 @@ void setup()
   pinMode(ARDUINO_LED, OUTPUT);
   digitalWrite(ARDUINO_LED, LOW);
   Serial.begin(ARDUINO_SERIAL_BAUD);
-
+  
+  led_strip_init();
+  button_init();
+  
   if (bt_conn_init() > 0) {
 
     // Enter DEBUG state
@@ -237,7 +252,7 @@ void setup()
   else if (!tof_sensor_init())
   {
     // Enter MANUAL state
-
+    Serial.println("Switching to MANUAL state...");
     digitalWrite(ARDUINO_LED, HIGH);
     led_strip_set_command(LED_STRIP_OFF);
     button_led_set(1);
@@ -251,16 +266,17 @@ void setup()
   }
 
   bt_conn_start();
-  led_strip_init();
-  button_init();
+
 }
 
 /**
- * After setup, this loop runs indefinitely. All this does is execute whichever
- * function that the execute_control_state function pointer is pointing at.
- */
+   After setup, this loop runs indefinitely. All this does is execute whichever
+   function that the execute_control_state function pointer is pointing at.
+*/
 void loop()
 {
   if (execute_control_state != NULL)
     (*execute_control_state)();
+
+  delay(1);
 }

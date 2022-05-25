@@ -1,11 +1,23 @@
 
+/**
+   =======================================================================
+   PrezenzQ Controller - bt_conn.cpp
+
+   Holt Environments
+   Author: Anthony Mesa
+   Date: 05/24/2022
+
+   =======================================================================
+*/
+
 #include "bt_conn.h"
 
-//  Software serial for bluetooth device so that
-//  we can still use the normal serial port for
-//  USB communication when plugged in.
+/**
+   Using software serial to communicate with the
+   HCO5 so that we can still use the normal serial
+   port for USB communication when plugged in
+*/
 static SoftwareSerial HC05(BT_RX, BT_TX);
-
 static int debug_enabled;
 
 int bt_conn_init() {
@@ -22,7 +34,7 @@ void bt_conn_start() {
   }
 }
 
-void bt_conn_send(int _data){
+void bt_conn_send(int _data) {
   HC05.write(_data);
 }
 
@@ -30,15 +42,15 @@ void bt_conn_send(byte* _data, int _len) {
   HC05.write(_data, _len);
 }
 
-int bt_conn_available(){
-  return HC05.available();  
+int bt_conn_available() {
+  return HC05.available();
 }
 
-int bt_conn_read(){
+int bt_conn_read() {
   return HC05.read();
 }
 
-int bt_conn_get_command(){
+int bt_conn_get_command() {
   if (bt_conn_available())
   {
     return bt_conn_read();

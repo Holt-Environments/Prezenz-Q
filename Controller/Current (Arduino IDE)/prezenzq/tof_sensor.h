@@ -1,4 +1,31 @@
 
+/**
+   =======================================================================
+   PrezenzQ Controller - button.h
+
+   Holt Environments
+   Author: Anthony Mesa
+   Date: 05/24/2022
+
+   button.h provides the necessary logic for interfacing with
+   an external button connected to the controller. This functionality
+   allows the controller to be triggered manually in the event that the
+   sensor isn't working properly.
+
+   Debounce is a typical issue with buttons. No hardware debouncing is
+   implemented, rather software debouncing is provided by the InputDebounce
+   library which can be found here:
+
+   https://github.com/Mokolea/InputDebounce
+
+   =======================================================================
+*/
+
+#ifndef ARDUINO_LIB
+#define ARDUINO_LIB
+#include <Arduino.h>
+#endif
+
 #include <Wire.h>
 #include <VL53L1X.h>
 
