@@ -1,4 +1,4 @@
-19795852055431094
+19797505655827812
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -56706,6 +56706,13 @@ Yellow 5381 Series LED
 0
 2
 2
+Library
+eBoot Mini MP1584EN DC-DC Buck Converter Adjustable Power Supply Module 24V to 12V 9V 5V 3V
+
+
+0
+8
+8
 Module
 A20_OLINUXINO_LIME2
 A20 Olinuxino LIME2, 1.2GHz, 512-1024MB RAM, Micro-SD, NAND or eMMC, 1000Mbit Ethernet

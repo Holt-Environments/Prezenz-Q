@@ -7,12 +7,8 @@
 	"fade_duration": ".25",
   "background": "bg.mp4",
 	"sensors": {
-		"A": {
-			"port": "COM5",
-			"video": "cat.mp4"
-		},
-		"B": {
-			"port": "COM7",
+		"D": {
+			"port": "COM13",
 			"video": "cat.mp4"
 		}
 	}
