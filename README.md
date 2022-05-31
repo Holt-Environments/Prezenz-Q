@@ -58,10 +58,22 @@ For any information in this section going forward, assume this information is on
 
 The schematics were created with KiCad and can be found in the controller directory of the repo. The schematics are incomplete in that they were designed solely for documentation of the controller creation process. Given the controllers were prototyped/assembled/soldered by hand, the schematics may not be using the appropriate symbols for some of the devices, or may not have any PCB footprint attributed to it (This is something that will be added in the future so that the boards can be printed and shipped).
 
+### Assembly
+
+All of the devices were soldered and assembled by hand.
+
+### Operation
+
+The devices have 2 states: NORMAL and DEBUG. 
+- In the NORMAL state, the device operates as it should, detecting sensor or button press, sending a command to the PC, receiving a command from the PC and chaning the LED lighting state, etc. 
+- In the DEBUG state, with the Nano on the controller plugged to a PC via usb cable, via serial communication the device's HC05 module can be calibrated using AT commands.
+
 ### Notes
 
-Because there are five 24V controllers that need powered at once, a special power cord was developed for this that ends in 5 barrel jacks. These 5 barrel jacks connect to the barrel jacks on the power cables that connect to the controller via screw terminals. As for screw terminal polarity, when looking at the device with the screw terminal facing you, the left terminal is positive.
+- Because there are five 24V controllers that need powered at once, a special power cord was developed for this that ends in 5 barrel jacks. These 5 barrel jacks connect to the barrel jacks on the power cables that connect to the controller via screw terminals. As for screw terminal polarity, when looking at the device with the screw terminal facing you, the left terminal is positive.
 
+- the 24V for the LED isn't techinally 'necessary' and another voltage LED strip could be used. We only went with 24V because that was the rating for the Nexmosphere LED strips we had at the time.
+- We only went with screw terminals because we had them on hand. It would be best to have a non-
 
 
 ## [Video Queueing Application](https://github.com/Holt-Environments/Prezenz-Q/tree/arduino_refactor/Queue/Windows%20x64)
