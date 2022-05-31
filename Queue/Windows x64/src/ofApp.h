@@ -20,6 +20,7 @@
 
 //	The video folder provided by this definition should reside within the "data" folder
 //	that is used by OpenFrameworks.#define VIDEO_FOLDER "video/"
+#define VIDEO_FOLDER "video/"
 
 class ofApp : public ofBaseApp
 {
