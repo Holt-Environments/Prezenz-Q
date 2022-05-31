@@ -1,4 +1,4 @@
-19797505655827812
+19799159390736145
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -56712,7 +56712,7 @@ eBoot Mini MP1584EN DC-DC Buck Converter Adjustable Power Supply Module 24V to 1
 
 0
 8
-8
+4
 Module
 A20_OLINUXINO_LIME2
 A20 Olinuxino LIME2, 1.2GHz, 512-1024MB RAM, Micro-SD, NAND or eMMC, 1000Mbit Ethernet
@@ -74668,6 +74668,13 @@ Potentiometer vertical Vishay T73YP
 0
 3
 3
+PrezenzQ
+HC05 Breakout Bluetooth Transceiver
+
+
+0
+6
+6
 RF
 Skyworks_SKY13575_639LF
 http://www.skyworksinc.com/uploads/documents/SKY13575_639LF_203270D.pdf

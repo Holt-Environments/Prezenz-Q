@@ -1,3 +1,5 @@
 (sym_lib_table
   (lib (name "New_Library")(type "KiCad")(uri "${KIPRJMOD}/New_Library.kicad_sym")(options "")(descr ""))
+  (lib (name "PrezenzQ")(type "KiCad")(uri "${KIPRJMOD}/PrezenzQ.kicad_sym")(options "")(descr ""))
+  (lib (name "SnapEDA-Library")(type "KiCad")(uri "C:/Users/AMesa/Desktop/delete me/SnapEDA-Library/SnapEDA-Library.kicad_sym")(options "")(descr ""))
 )
