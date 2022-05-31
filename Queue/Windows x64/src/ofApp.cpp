@@ -289,6 +289,11 @@ void updateVideoQueue()
 	}
 }
 
+/** 
+ * If the overlay is set, then it needs to be updated, and the background video needs
+ * to be paused depending on if the current frame of the overlay is within either of the
+ * two fade periods/sections.
+ */	
 void updateBackground()
 {
 	if (overlay != NULL)
@@ -310,6 +315,8 @@ void updateBackground()
 }
 
 //--------------------------------------------------------------
+//	Is called every frame before ofApp::draw is called.
+
 void ofApp::update(){
 
 	background.update();
@@ -319,21 +326,53 @@ void ofApp::update(){
 	updateBackground();
 }
 
+
+//
+//	Sets the frame opacity based on which frame is currently being played in the video.
+// 
+//	There are two designated fading sections for the overlay. The illustration below shows what these
+//	fade sections would look like if placed on a frame-by-frame timeline:
+//	
+//	|-- fade section 1  --|================= video ===============|-- fade section 2 --|========...
+//
+//	fade section 1 - Begins at the first frame of the video and lasts for the pre-defined fade duration.
+//	fade section 2 - This is initially set to be at the end of the video, that is, the fade section's last
+//		frame is the last frame of the video. This fade section is depicted by two variables:
+//			overlay_fade_out_begin, 
+//			overlay_fade_out_end
+//		and if an action takes place that requires the video to end before it has completed playing, then
+//		these fade section variables should be edited to reflect the new fade section required to 
+//		fade out the video according to the new situation.
+// 
+//	E.g. If the overlay video is 500 frames, and the fade_duration is 25 frames, then overlay_fade_out_begin
+//		would be set to 475 and overlay_fade_out_end would be set to 500. Say that the player is on frame 250
+//		and we need to turn off the video, then overlay_fade_out_begin should be set to 251, and 
+//		overlay_fade_out_end should be set to 276 (251 + 25).
+//
 void setOverlayFrameOpacity()
 {
+	//	Get the current frame index of the overlay video.
 	int frame_number = overlay->getCurrentFrame();
 
+	//	Current frame is in fade section 1
 	if ((frame_number > -1) && (frame_number <= fade_duration))
 	{
+		//	Lerp across the fade duration using the frame number. Multiplying by 255 gives
+		//	the proper transparency value. transitions from transparent (0) to opaque (255).
 		int opacity = (int)(((double) frame_number / fade_duration) * 255);
 		ofSetColor(255, 255, 255, opacity);
 	}
+	//	Current frame is in fade section 2
 	else if ((frame_number <= overlay_fade_out_end) && (frame_number >= overlay_fade_out_begin))
 	{
+		//	Lerp accross overlay_fade_out_begin and overlay_fade_out_begin using the
+		//	current frame number. 
 		int numerator = frame_number - overlay_fade_out_begin;
 		int denominator = overlay_fade_out_end - overlay_fade_out_begin;
 		double lerp_value = (double) numerator / denominator;
-
+		
+		//	Because this is a fade out, subtract the lerp value from 1 before multipying by 255
+		//	so that the transition is from opaque to transparent.
 		int opacity = (1.0 - lerp_value) * 255;
 		ofSetColor(255, 255, 255, opacity);
 	}
@@ -344,9 +383,14 @@ void ofApp::draw(){
 
 	background.draw(window_posx, window_posy, window_width, window_height);
 
+	//	Only draw the overlay to the screen if the overlay is set.
 	if (overlay != NULL)
 	{
+		//	ofEnableAlphaBlending() called here will allow us to set the opacity of the 
+		//	overlay video frame.
 		ofEnableAlphaBlending();
+		
+		//	Update the overlay opacity and draw to screen
 		setOverlayFrameOpacity();
 		overlay->draw(window_posx, window_posy, window_width, window_height);
 		ofDisableAlphaBlending();
