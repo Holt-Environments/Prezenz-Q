@@ -2,13 +2,24 @@
 
 #include "ofMain.h"
 
+//	On Windows, if a COM port number exceeds 9, then it needs
+//	to be prefaced with the "\\\\.\\" below. To take care of this,
+//	the serial prefix will be added to all COM ports from the config file.
 #define SERIAL_PREFIX ""
 #ifdef _WIN32
 #define SERIAL_PREFIX "\\\\.\\"
 #endif
 
+//	Defines the limit for the length of the buffer that can be received by the 
+//	connected serial devices. If this length/index is exceeded while parsing serial
+//	data, then the serial data will be ignored.
 #define INTERACTIVE_DEVICE_BUFFER_LIMIT 64
-#define VIDEO_FOLDER "video/"
+
+//	Defines a custom location for the OpenFrameworks data folder.
+#define DATA_FOLDER "../data"
+
+//	The video folder provided by this definition should reside within the "data" folder
+//	that is used by OpenFrameworks.#define VIDEO_FOLDER "video/"
 
 class ofApp : public ofBaseApp
 {
